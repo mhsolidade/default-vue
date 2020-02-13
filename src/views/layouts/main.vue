@@ -2,11 +2,11 @@
   <div :class="$style.container">
     <NavDrawer />
     <NavBar />
-    <v-content>
-      <v-container class="fill-height" fluid>
+    <VContent>
+      <VContainer class="fill-height" fluid>
         <slot />
-      </v-container>
-    </v-content>
+      </VContainer>
+    </VContent>
   </div>
 </template>
 <script>

@@ -1,14 +1,14 @@
-import Vue from 'vue';
-import Vuetify from 'vuetify';
-import 'vuetify/dist/vuetify.min.css';
+import Vue from 'vue'
+import Vuetify from 'vuetify'
+import 'vuetify/dist/vuetify.min.css'
 
-Vue.use(Vuetify);
+Vue.use(Vuetify)
 
 export default new Vuetify({
   theme: {
-      options: {
-        customProperties: true,
-      },
+    options: {
+      customProperties: true,
+    },
     // themes: {
     //   light: {
     //     primary: '#ee44aa',
@@ -21,4 +21,4 @@ export default new Vuetify({
     //   },
     // },
   },
-});
+})

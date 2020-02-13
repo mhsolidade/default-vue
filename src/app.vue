@@ -1,13 +1,12 @@
-
-
 <template>
-  <v-app id="app">
+  <VApp id="app">
     <!--
-    Even when routes use the same component, treat them
-    as distinct and create the component again.
-    -->
+      Even when routes use the same component, treat them
+      as distinct and create the component again.
+      -->
+
     <RouterView :key="$route.fullPath" />
-  </v-app>
+  </VApp>
 </template>
 <script>
 import appConfig from '@src/app.config'
@@ -23,13 +22,31 @@ export default {
 }
 </script>
 <!-- This should generally be the only global CSS in the app. -->
-
-<!-- This should generally be the only global CSS in the app. -->
 <style lang="scss">
 // Allow element/type selectors, because this is global CSS.
 // stylelint-disable selector-max-type, selector-class-pattern
+#app {
+  @import '@design';
 
-// Design variables and utilities from src/design.
-@import '@design';
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
+  body {
+    background: $color-body-bg;
+  }
+  a,
+  a:visited {
+    color: $color-link-text;
+  }
+
+  // ===
+  // Vendor
+  // ===
+  #nprogress .bar {
+    background: $color-link-text;
+  }
+}
 </style>
