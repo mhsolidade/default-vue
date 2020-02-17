@@ -4,24 +4,16 @@ import login from './login'
 export default [
   {
     path: '',
-    name: 'home',
+    name: 'dashboard',
     meta: {
       authRequired: true,
     },
-    component: () => lazyLoadView(import('@views/home.vue')),
+    component: () => lazyLoadView(import('@views/dashboard/index.vue')),
   },
   {
     path: '/login',
     component: () => lazyLoadView(import('@views/login/index.vue')),
     children: [...login],
-  },
-  {
-    path: '/about',
-    name: 'about',
-    component: () => lazyLoadView(import('@views/about.vue')),
-    meta: {
-      authRequired: true,
-    },
   },
   {
     path: '/404',

@@ -8,3 +8,12 @@ export const authComputed = {
 }
 
 export const authMethods = mapActions('auth', ['logIn', 'logOut'])
+
+export const layoutMenuMethods = mapActions('layoutMenu', [
+  'toggleActivateMenu',
+  'setActivateMenu',
+])
+
+export const layoutMenuComputed = {
+  ...mapGetters('layoutMenu', ['activateMenu']),
+}

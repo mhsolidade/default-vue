@@ -1,6 +1,10 @@
 <template>
   <VAppBar color="grey darken-1" dense dark height="60" app clipped-left>
-    <VAppBarNavIcon v-if="loggedIn"></VAppBarNavIcon>
+    <VAppBarNavIcon
+      v-if="loggedIn"
+      class="mr-5"
+      @click="toggleActivateMenu"
+    ></VAppBarNavIcon>
     <VRow :justify="loggedIn ? 'start' : 'center'">
       <VToolbarTitle class="text-center">
         {{ title }}
@@ -18,7 +22,7 @@
 </template>
 
 <script>
-import { authComputed } from '@state/helpers'
+import { authComputed, layoutMenuMethods } from '@state/helpers'
 import appConfig from '@src/app.config'
 
 export default {
@@ -29,6 +33,9 @@ export default {
   },
   computed: {
     ...authComputed,
+  },
+  methods: {
+    ...layoutMenuMethods,
   },
 }
 </script>

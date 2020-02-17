@@ -1,5 +1,5 @@
 <template>
-  <VNavigationDrawer v-if="loggedIn" app clipped>
+  <VNavigationDrawer v-if="loggedIn" v-model="drawer" app clipped>
     <!-- v-model="drawer" -->
     <VList dense>
       <VListItem link>
@@ -15,7 +15,7 @@
           <VIcon>mdi-settings</VIcon>
         </VListItemAction>
         <VListItemContent>
-          <VListItemTitle>Settings</VListItemTitle>
+          <VListItemTitle>{{ activateMenu }}</VListItemTitle>
         </VListItemContent>
       </VListItem>
     </VList>
@@ -23,11 +23,32 @@
 </template>
 
 <script>
-import { authComputed } from '@state/helpers'
+import {
+  authComputed,
+  layoutMenuComputed,
+  layoutMenuMethods,
+} from '@state/helpers'
 
 export default {
+  data() {
+    return {
+      localDrawer: true,
+    }
+  },
   computed: {
     ...authComputed,
+    ...layoutMenuComputed,
+    drawer: {
+      get() {
+        return this.activateMenu
+      },
+      set(value) {
+        this.setActivateMenu(value)
+      },
+    },
+  },
+  methods: {
+    ...layoutMenuMethods,
   },
 }
 </script>

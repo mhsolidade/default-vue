@@ -3,8 +3,10 @@
     <NavDrawer />
     <NavBar />
     <VContent>
-      <VContainer class="fill-height" fluid>
-        <slot />
+      <VContainer fluid>
+        <div>
+          <slot />
+        </div>
       </VContainer>
     </VContent>
   </div>
