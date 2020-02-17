@@ -4,11 +4,40 @@ import login from './login'
 export default [
   {
     path: '',
+    redirect: 'dashboard',
+  },
+  {
+    path: '/dashboard',
     name: 'dashboard',
     meta: {
       authRequired: true,
+      itemActive: 'dashboard',
     },
     component: () => lazyLoadView(import('@views/dashboard/index.vue')),
+  },
+  {
+    path: '/gatilho',
+    name: 'trigger',
+    meta: {
+      authRequired: true,
+    },
+    component: () => lazyLoadView(import('@views/example.vue')),
+  },
+  {
+    path: '/relatorios',
+    name: 'reports',
+    meta: {
+      authRequired: true,
+    },
+    component: () => lazyLoadView(import('@views/example.vue')),
+  },
+  {
+    path: '/configuracao',
+    name: 'settings',
+    meta: {
+      authRequired: true,
+    },
+    component: () => lazyLoadView(import('@views/example.vue')),
   },
   {
     path: '/login',

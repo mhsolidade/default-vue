@@ -39,14 +39,12 @@ export const actions = {
 
   // Logs out the current user.
   logOut({ commit }) {
-    console.log('logOut')
     commit('SET_CURRENT_USER', null)
   },
 
   // Validates the current user's token and refreshes it
   // with new data from the API.
   validate({ commit, state }) {
-    console.log('validate', state.currentUser, !state.currentUser)
     if (!state.currentUser) return Promise.resolve(null)
 
     return axios
@@ -55,8 +53,6 @@ export const actions = {
         const user = Object.assign({}, response.data, {
           token: state.currentUser.token,
         })
-        console.log({ response: user })
-
         commit('SET_CURRENT_USER', user)
         return user
       })

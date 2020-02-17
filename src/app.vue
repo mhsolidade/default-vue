@@ -41,10 +41,6 @@ export default {
   body {
     background: $color-body-bg;
   }
-  a,
-  a:visited {
-    color: $color-link-text;
-  }
 
   // ===
   // Vendor

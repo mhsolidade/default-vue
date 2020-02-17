@@ -2,22 +2,22 @@
   <VNavigationDrawer v-if="loggedIn" v-model="drawer" app clipped>
     <!-- v-model="drawer" -->
     <VList dense>
-      <VListItem link>
-        <VListItemAction>
-          <VIcon>mdi-view-dashboard</VIcon>
-        </VListItemAction>
-        <VListItemContent>
-          <VListItemTitle>Dashboard</VListItemTitle>
-        </VListItemContent>
-      </VListItem>
-      <VListItem link>
-        <VListItemAction>
-          <VIcon>mdi-settings</VIcon>
-        </VListItemAction>
-        <VListItemContent>
-          <VListItemTitle>{{ activateMenu }}</VListItemTitle>
-        </VListItemContent>
-      </VListItem>
+      <VListItemGroup v-model="itemActive" color="black">
+        <VListItem
+          v-for="(item, i) in links"
+          :key="i"
+          active-class="info--text"
+          :to="item.router"
+          link
+        >
+          <VListItemAction v-if="item.icon">
+            <VIcon>{{ item.icon }}</VIcon>
+          </VListItemAction>
+          <VListItemContent>
+            <VListItemTitle>{{ item.name }} </VListItemTitle>
+          </VListItemContent>
+        </VListItem>
+      </VListItemGroup>
     </VList>
   </VNavigationDrawer>
 </template>
@@ -32,7 +32,7 @@ import {
 export default {
   data() {
     return {
-      localDrawer: true,
+      itemActive: 1,
     }
   },
   computed: {

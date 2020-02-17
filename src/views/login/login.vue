@@ -65,6 +65,7 @@ export default {
       username: '',
       password: '',
       authError: false,
+      logError: '',
       tryingToLogIn: false,
       rules: {
         required: [(v) => !!v || `Preencha corretamente`],
@@ -83,12 +84,14 @@ export default {
       })
         .then((token) => {
           this.tryingToLogIn = false
-          this.$router.push(this.$route.query.redirectFrom || { name: 'home' })
+          this.$router.push(
+            this.$route.query.redirectFrom || { name: 'dashboard' }
+          )
         })
         .catch((error) => {
-          console.log('error', error)
           this.tryingToLogIn = false
           this.authError = true
+          this.logError = error
         })
     },
   },

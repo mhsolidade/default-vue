@@ -1,9 +1,53 @@
 export const state = {
-  activateMenu: false,
+  activateMenu: true,
+  itemActive: true,
+  links: [
+    {
+      name: 'Dashboard',
+      icon: 'mdi-view-dashboard',
+      color: '',
+      isActive: false,
+      router: { name: 'dashboard' },
+      children: [],
+    },
+    {
+      name: 'Gatilhos',
+      icon: 'mdi-card-outline',
+      color: '',
+      isActive: false,
+      router: { name: 'trigger' },
+      children: [],
+    },
+    {
+      name: 'Relatórios',
+      icon: 'mdi-card-outline',
+      color: '',
+      isActive: false,
+      router: { name: 'reports' },
+      children: [],
+    },
+    {
+      name: 'Configurações',
+      icon: 'mdi-card-outline',
+      color: '',
+      isActive: false,
+      router: { name: 'settings' },
+      children: [],
+    },
+    {
+      name: 'sair',
+      icon: 'mdi-logout',
+      color: '',
+      isActive: false,
+      router: { name: 'logout' },
+      children: [],
+    },
+  ],
 }
 
 export const getters = {
   activateMenu: (state) => state.activateMenu,
+  itemActive: (state) => state.itemActive,
 }
 
 export const mutations = {

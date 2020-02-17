@@ -16,4 +16,5 @@ export const layoutMenuMethods = mapActions('layoutMenu', [
 
 export const layoutMenuComputed = {
   ...mapGetters('layoutMenu', ['activateMenu']),
+  ...mapState('layoutMenu', ['links']),
 }
