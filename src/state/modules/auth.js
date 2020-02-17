@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from '@plugins/axios'
 
 export const state = {
   currentUser: getSavedState('auth.currentUser'),
@@ -7,7 +7,7 @@ export const state = {
 export const mutations = {
   SET_CURRENT_USER(state, newValue) {
     state.currentUser = newValue
-    saveState('auth.currentUser', newValue)
+    saveState('auth.currentUser', state.currentUser)
     setDefaultAuthHeaders(state)
   },
 }
@@ -30,30 +30,33 @@ export const actions = {
   // Logs in the current user.
   logIn({ commit, dispatch, getters }, { username, password } = {}) {
     if (getters.loggedIn) return dispatch('validate')
-
-    return axios
-      .post('/api/session', { username, password })
-      .then((response) => {
-        const user = response.data
-        commit('SET_CURRENT_USER', user)
-        return user
-      })
+    return axios.post('login', { username, password }).then((response) => {
+      const user = response.data
+      commit('SET_CURRENT_USER', user)
+      return user
+    })
   },
 
   // Logs out the current user.
   logOut({ commit }) {
+    console.log('logOut')
     commit('SET_CURRENT_USER', null)
   },
 
   // Validates the current user's token and refreshes it
   // with new data from the API.
   validate({ commit, state }) {
+    console.log('validate', state.currentUser, !state.currentUser)
     if (!state.currentUser) return Promise.resolve(null)
 
     return axios
-      .get('/api/session')
+      .get('user')
       .then((response) => {
-        const user = response.data
+        const user = Object.assign({}, response.data, {
+          token: state.currentUser.token,
+        })
+        console.log({ response: user })
+
         commit('SET_CURRENT_USER', user)
         return user
       })
@@ -82,6 +85,6 @@ function saveState(key, state) {
 
 function setDefaultAuthHeaders(state) {
   axios.defaults.headers.common.Authorization = state.currentUser
-    ? state.currentUser.token
+    ? `Bearer ${state.currentUser.token.accessToken}`
     : ''
 }

@@ -1,7 +1,7 @@
 import router from '@router'
 import store from '@state/store'
+import vuetify from '@plugins/vuetify'
 import App from './app.vue'
-import vuetify from './plugins/vuetify'
 import Vue from 'vue'
 
 Vue.config.productionTip = process.env.NODE_ENV === 'production'

@@ -25,6 +25,10 @@ export default {
 <style lang="scss">
 // Allow element/type selectors, because this is global CSS.
 // stylelint-disable selector-max-type, selector-class-pattern
+
+// Style loading bar between pages.
+// https://github.com/rstacruz/nprogress
+@import '~nprogress/nprogress.css';
 #app {
   @import '@design';
 

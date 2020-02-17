@@ -1,5 +1,5 @@
 <template>
-  <Layout>
+  <div>
     <VCardText>
       <h1 class="title text-center">Resetar senha</h1>
       <p>
@@ -55,16 +55,11 @@
         </VRow>
       </VForm>
     </VCardText>
-  </Layout>
+  </div>
 </template>
 
 <script>
-import Layout from '@layouts/login.vue'
-
 export default {
-  components: {
-    Layout,
-  },
   data() {
     return {
       visibilityPassword: false,

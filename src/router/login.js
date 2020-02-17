@@ -1,18 +1,55 @@
+import store from '@state/store'
+
 export default [
   {
     path: '',
     name: 'login',
-    component: () => lazyLoadView(import('@components/login/login.vue')),
+    component: () => lazyLoadView(import('@views/login/login.vue')),
+    meta: {
+      beforeResolve(routeTo, routeFrom, next) {
+        // If the user is already logged in
+        if (store.getters['auth/loggedIn']) {
+          // Redirect to the home page instead
+          next({ name: 'home' })
+        } else {
+          // Continue to the login page
+          next()
+        }
+      },
+    },
   },
   {
     path: '/recover',
     name: 'recover',
-    component: () => lazyLoadView(import('@components/login/recover.vue')),
+    component: () => lazyLoadView(import('@views/login/recover.vue')),
   },
   {
     path: '/reset',
     name: 'reset',
-    component: () => lazyLoadView(import('@components/login/reset.vue')),
+    component: () => lazyLoadView(import('@views/login/reset.vue')),
+  },
+  {
+    path: '/logout',
+    name: 'logout',
+    meta: {
+      authRequired: true,
+      beforeResolve(routeTo, routeFrom, next) {
+        store.dispatch('auth/logOut')
+        setTimeout(() => {
+          const authRequiredOnPreviousRoute = routeFrom.matched.some(
+            (route) => route.meta.authRequired
+          )
+          // Navigate back to previous page, or home as a fallback
+          console.log(
+            authRequiredOnPreviousRoute,
+            authRequiredOnPreviousRoute ? { name: 'home' } : { ...routeFrom }
+          )
+          next(
+            authRequiredOnPreviousRoute ? { name: 'login' } : { ...routeFrom }
+          )
+        }, 900)
+      },
+    },
   },
 ]
 

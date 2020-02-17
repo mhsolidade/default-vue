@@ -1,5 +1,6 @@
 <template>
-  <VNavigationDrawer v-if="loggedIn" v-model="drawer" app clipped>
+  <VNavigationDrawer v-if="loggedIn" app clipped>
+    <!-- v-model="drawer" -->
     <VList dense>
       <VListItem link>
         <VListItemAction>
