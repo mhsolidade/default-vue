@@ -3,6 +3,7 @@
     <NavDrawer />
     <NavBar />
     <VContent>
+      <Breadcrumbs />
       <VContainer fluid>
         <div>
           <slot />
@@ -14,9 +15,10 @@
 <script>
 import NavBar from '@components/nav-bar.vue'
 import NavDrawer from '@components/navigation-drawer.vue'
+import Breadcrumbs from '@components/breadcrumbs.vue'
 
 export default {
-  components: { NavBar, NavDrawer },
+  components: { NavBar, NavDrawer, Breadcrumbs },
 }
 </script>
 <style lang="scss" module>

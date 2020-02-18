@@ -48,7 +48,7 @@ module.exports = {
         named: 'longform',
       },
     ],
-    'vue/valid-v-slot': 'error',
+    'vue/valid-v-slot': 'off',
   },
   overrides: [
     {

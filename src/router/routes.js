@@ -1,5 +1,6 @@
 // import store from '@state/store'
 import login from './login'
+import trigger from './trigger'
 
 export default [
   {
@@ -11,17 +12,23 @@ export default [
     name: 'dashboard',
     meta: {
       authRequired: true,
-      itemActive: 'dashboard',
+      bradcrumb: [
+        {
+          text: 'Dashboard',
+          disabled: true,
+          routerName: 'dashboard',
+        },
+      ],
     },
     component: () => lazyLoadView(import('@views/dashboard/index.vue')),
   },
   {
-    path: '/gatilho',
-    name: 'trigger',
+    path: '/gatilhos/',
     meta: {
       authRequired: true,
     },
-    component: () => lazyLoadView(import('@views/example.vue')),
+    component: () => lazyLoadView(import('@views/trigger/index.vue')),
+    children: [...trigger],
   },
   {
     path: '/relatorios',
