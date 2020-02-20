@@ -31,7 +31,7 @@ export const state = {
       icon: 'mdi-card-outline',
       color: '',
       isActive: false,
-      router: { name: 'settings' },
+      router: { name: 'configuration' },
       children: [],
     },
     {

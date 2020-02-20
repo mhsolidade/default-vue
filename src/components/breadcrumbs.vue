@@ -1,14 +1,15 @@
 <template>
-  <v-breadcrumbs class="grey lighten-1" :items="items">
+  <VBreadcrumbs class="grey lighten-1" :items="items">
     <template v-slot:item="{ item }">
-      <v-breadcrumbs-item
-        :to="{ name: item.routerName }"
+      <VBreadcrumbsItem
         :disabled="item.disabled"
+        :to="{ name: item.routerName }"
+        exact
       >
         {{ item.text }}
-      </v-breadcrumbs-item>
+      </VBreadcrumbsItem>
     </template>
-  </v-breadcrumbs>
+  </VBreadcrumbs>
 </template>
 <script>
 export default {
@@ -28,3 +29,7 @@ export default {
   },
 }
 </script>
+
+<style lang="scss" module>
+@import '@design';
+</style>

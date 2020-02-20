@@ -1,6 +1,7 @@
 // import store from '@state/store'
 import login from './login'
 import trigger from './trigger'
+import configuration from './configuration'
 
 export default [
   {
@@ -40,11 +41,11 @@ export default [
   },
   {
     path: '/configuracao',
-    name: 'settings',
     meta: {
       authRequired: true,
     },
-    component: () => lazyLoadView(import('@views/example.vue')),
+    children: [...configuration],
+    component: () => lazyLoadView(import('@views/configuration/index.vue')),
   },
   {
     path: '/login',

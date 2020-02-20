@@ -49,6 +49,7 @@ module.exports = {
       },
     ],
     'vue/valid-v-slot': 'off',
+    'vue/attribute-hyphenation': 'off',
   },
   overrides: [
     {
