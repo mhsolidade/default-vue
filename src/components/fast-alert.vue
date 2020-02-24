@@ -1,0 +1,18 @@
+<template>
+  <v-row justify="center" style="min-height: 50px;">
+    <v-fade-transition mode="out-in">
+      <v-alert v-show="active" class="grey lighten-4" width="100%">
+        {{ text }}
+      </v-alert>
+    </v-fade-transition>
+  </v-row>
+</template>
+
+<script>
+import { alertComputde } from '@state/helpers'
+export default {
+  computed: {
+    ...alertComputde,
+  },
+}
+</script>

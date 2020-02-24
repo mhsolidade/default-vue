@@ -12,11 +12,9 @@
     </VRow>
     <template v-if="loggedIn">
       <VSpacer></VSpacer>
-      <VBtn icon>
-        <VAvatar>
-          <VIcon dark>mdi-account-circle</VIcon>
-        </VAvatar>
-      </VBtn>
+      <VIcon class="mr-1" large>mdi-account-circle</VIcon>
+      {{ currentUser.name }}
+      <NavBarMenuUser />
     </template>
   </VAppBar>
 </template>
@@ -24,8 +22,12 @@
 <script>
 import { authComputed, layoutMenuMethods } from '@state/helpers'
 import appConfig from '@src/app.config'
+import NavBarMenuUser from './nav-bar-menu-user.vue'
 
 export default {
+  components: {
+    NavBarMenuUser,
+  },
   data() {
     return {
       title: appConfig.title,

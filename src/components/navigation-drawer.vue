@@ -1,5 +1,13 @@
 <template>
-  <VNavigationDrawer v-if="loggedIn" v-model="drawer" app clipped>
+  <VNavigationDrawer
+    v-if="loggedIn"
+    v-model="drawer"
+    app
+    clipped
+    color="grey darken-3"
+    dense
+    dark
+  >
     <!-- v-model="drawer" -->
     <VList dense>
       <VListItemGroup v-model="itemActive" color="black">

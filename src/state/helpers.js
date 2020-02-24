@@ -18,3 +18,17 @@ export const layoutMenuComputed = {
   ...mapGetters('layoutMenu', ['activateMenu']),
   ...mapState('layoutMenu', ['links']),
 }
+
+export const alertComputde = {
+  ...mapGetters('alert', ['active', 'text']),
+}
+export const alertMethods = mapActions('alert', ['newAlert'])
+
+export const confirmationComputde = {
+  ...mapGetters('confirmation', ['description', 'title', 'promise', 'active']),
+}
+
+export const confirmationMethods = mapActions('confirmation', [
+  'setConfirmation',
+  'cancel',
+])
