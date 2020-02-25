@@ -26,19 +26,19 @@
         title="Temas"
         subtitle="Crie temas padrões para o seu HTML e temas sazonais para datas comemorativas."
         btnTitle="Administrar"
-        routerName="configuration"
+        routerName="theme"
       ></configurationLink>
       <configurationLink
         title="Templates"
         subtitle="Crie, edite e visualize todos os seus templates."
         btnTitle="Administrar"
-        routerName="configuration"
+        routerName="template"
       ></configurationLink>
       <configurationLink
         title="URL’s"
         subtitle="Cadastre links para serem utilizados nos templates."
         btnTitle="Administrar"
-        routerName="configuration"
+        routerName="url"
       ></configurationLink>
     </VCol>
   </VRow>

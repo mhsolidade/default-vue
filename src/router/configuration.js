@@ -55,7 +55,7 @@ export default [
         props: (route) => ({ banners: route.meta.tmp.banners }),
       },
       {
-        path: 'new',
+        path: 'novo',
         name: 'bannerNew',
         meta: {
           bradcrumb: [
@@ -75,7 +75,14 @@ export default [
               routerName: 'bannerNew',
             },
           ],
+          tmp: {},
+          beforeResolve(routeTo, routeFrom, next) {
+            store.dispatch('banner/clearBanner')
+            routeTo.meta.tmp.banner = store.getters['banner/banner']
+            next()
+          },
         },
+        props: (route) => ({ banner: route.meta.tmp.banner }),
         component: () =>
           lazyLoadView(import(`@views/configuration/banner/banner.vue`)),
       },
@@ -98,6 +105,299 @@ export default [
         },
         component: () =>
           lazyLoadView(import(`@views/configuration/banner/banner.vue`)),
+      },
+    ],
+  },
+  {
+    path: '/temas',
+    component: () =>
+      lazyLoadView(import(`@views/configuration/theme/index.vue`)),
+    children: [
+      {
+        path: '/',
+        name: 'theme',
+        meta: {
+          bradcrumb: [
+            {
+              text: 'Configurações',
+              disabled: false,
+              routerName: 'configuration',
+            },
+            {
+              text: 'Temas',
+              disabled: false,
+              routerName: 'theme',
+            },
+          ],
+          tmp: {},
+          beforeResolve(routeTo, routeFrom, next) {
+            store
+              // Try to fetch the user's information by their username
+              .dispatch('theme/fetchThemes')
+              .then((themes) => {
+                routeTo.meta.tmp.themes = themes
+                next()
+              })
+              .catch(() => {
+                next({ name: '404', params: { resource: 'Themes' } })
+              })
+          },
+        },
+        component: () =>
+          lazyLoadView(import(`@views/configuration/theme/list.vue`)),
+        props: (route) => ({ themes: route.meta.tmp.themes }),
+      },
+      {
+        path: 'novo',
+        name: 'themeNew',
+        meta: {
+          bradcrumb: [
+            {
+              text: 'Configurações',
+              disabled: false,
+              routerName: 'configuration',
+            },
+            {
+              text: 'Temas',
+              disabled: false,
+              routerName: 'theme',
+            },
+            {
+              text: 'Novo',
+              disabled: true,
+              routerName: 'themeNew',
+            },
+          ],
+          tmp: {},
+          beforeResolve(routeTo, routeFrom, next) {
+            store.dispatch('theme/clearTheme')
+            routeTo.meta.tmp.theme = store.getters['theme/theme']
+            next()
+          },
+        },
+        props: (route) => ({ theme: route.meta.tmp.theme }),
+        component: () =>
+          lazyLoadView(import(`@views/configuration/theme/theme.vue`)),
+      },
+      {
+        path: ':id',
+        name: 'themeEdit',
+        meta: {
+          bradcrumb: [
+            {
+              text: 'Configurações',
+              disabled: false,
+              routerName: 'configuration',
+            },
+            {
+              text: 'Temas',
+              disabled: false,
+              routerName: 'theme',
+            },
+            {
+              text: 'Novo',
+              disabled: true,
+              routerName: 'themeEdit',
+            },
+          ],
+        },
+        component: () =>
+          lazyLoadView(import(`@views/configuration/theme/theme.vue`)),
+      },
+    ],
+  },
+  {
+    path: '/template',
+    component: () =>
+      lazyLoadView(import(`@views/configuration/template/index.vue`)),
+    children: [
+      {
+        path: '/',
+        name: 'template',
+        meta: {
+          bradcrumb: [
+            {
+              text: 'Configurações',
+              disabled: false,
+              routerName: 'configuration',
+            },
+            {
+              text: 'Template',
+              disabled: false,
+              routerName: 'template',
+            },
+          ],
+          tmp: {},
+          beforeResolve(routeTo, routeFrom, next) {
+            store
+              // Try to fetch the user's information by their username
+              .dispatch('template/fetchTemplates')
+              .then((templates) => {
+                routeTo.meta.tmp.templates = templates
+                next()
+              })
+              .catch(() => {
+                next({ name: '404', params: { resource: 'templates' } })
+              })
+          },
+        },
+        component: () =>
+          lazyLoadView(import(`@views/configuration/template/list.vue`)),
+        props: (route) => ({ templates: route.meta.tmp.templates }),
+      },
+      {
+        path: 'novo',
+        name: 'templateNew',
+        meta: {
+          bradcrumb: [
+            {
+              text: 'Configurações',
+              disabled: false,
+              routerName: 'configuration',
+            },
+            {
+              text: 'Template',
+              disabled: false,
+              routerName: 'template',
+            },
+            {
+              text: 'Novo',
+              disabled: true,
+              routerName: 'templateNew',
+            },
+          ],
+          tmp: {},
+          beforeResolve(routeTo, routeFrom, next) {
+            store.dispatch('template/clearTemplate')
+            routeTo.meta.tmp.template = store.getters['template/template']
+            next()
+          },
+        },
+        props: (route) => ({ template: route.meta.tmp.template }),
+        component: () =>
+          lazyLoadView(import(`@views/configuration/template/template.vue`)),
+      },
+      {
+        path: ':id',
+        name: 'templateEdit',
+        meta: {
+          bradcrumb: [
+            {
+              text: 'Configurações',
+              disabled: false,
+              routerName: 'configuration',
+            },
+            {
+              text: 'Templates',
+              disabled: false,
+              routerName: 'template',
+            },
+            {
+              text: 'Novo',
+              disabled: true,
+              routerName: 'templateEdit',
+            },
+          ],
+        },
+        component: () =>
+          lazyLoadView(import(`@views/configuration/template/template.vue`)),
+      },
+    ],
+  },
+  {
+    path: '/url',
+    component: () => lazyLoadView(import(`@views/configuration/url/index.vue`)),
+    children: [
+      {
+        path: '/',
+        name: 'url',
+        meta: {
+          bradcrumb: [
+            {
+              text: 'Configurações',
+              disabled: false,
+              routerName: 'configuration',
+            },
+            {
+              text: 'Urls',
+              disabled: false,
+              routerName: 'url',
+            },
+          ],
+          tmp: {},
+          beforeResolve(routeTo, routeFrom, next) {
+            store
+              // Try to fetch the user's information by their username
+              .dispatch('url/fetchUrls')
+              .then((urls) => {
+                routeTo.meta.tmp.urls = urls
+                next()
+              })
+              .catch(() => {
+                next({ name: '404', params: { resource: 'urls' } })
+              })
+          },
+        },
+        component: () =>
+          lazyLoadView(import(`@views/configuration/url/list.vue`)),
+        props: (route) => ({ urls: route.meta.tmp.urls }),
+      },
+      {
+        path: 'novo',
+        name: 'urlNew',
+        meta: {
+          bradcrumb: [
+            {
+              text: 'Configurações',
+              disabled: false,
+              routerName: 'configuration',
+            },
+            {
+              text: 'Urls',
+              disabled: false,
+              routerName: 'url',
+            },
+            {
+              text: 'Novo',
+              disabled: true,
+              routerName: 'urlNew',
+            },
+          ],
+          tmp: {},
+          beforeResolve(routeTo, routeFrom, next) {
+            store.dispatch('url/clearUrl')
+            routeTo.meta.tmp.url = store.getters['url/url']
+            next()
+          },
+        },
+        props: (route) => ({ url: route.meta.tmp.url }),
+        component: () =>
+          lazyLoadView(import(`@views/configuration/url/url.vue`)),
+      },
+      {
+        path: ':id',
+        name: 'urlEdit',
+        meta: {
+          bradcrumb: [
+            {
+              text: 'Configurações',
+              disabled: false,
+              routerName: 'configuration',
+            },
+            {
+              text: 'Urls',
+              disabled: false,
+              routerName: 'url',
+            },
+            {
+              text: 'Novo',
+              disabled: true,
+              routerName: 'urlEdit',
+            },
+          ],
+        },
+        component: () =>
+          lazyLoadView(import(`@views/configuration/url/url.vue`)),
       },
     ],
   },

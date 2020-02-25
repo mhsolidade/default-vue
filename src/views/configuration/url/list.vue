@@ -3,36 +3,22 @@
     <template v-slot:title>
       <VRow>
         <VCol cols="10" class="headline" justify="center">
-          Banners
-        </VCol>
-        <VCol cols="2" class="headline" align-self="center">
-          <v-checkbox
-            v-model="checkbox"
-            hide-details
-            class="ma-0 pa-0"
-            :label="`Exibir inativos`"
-          ></v-checkbox>
+          URl's
         </VCol>
       </VRow>
     </template>
     <template v-slot:subtitle>
-      <VBtn outlined :to="{ name: 'bannerNew' }">Criar Banner</VBtn>
+      <VBtn outlined :to="{ name: 'urlNew' }">Criar Url</VBtn>
     </template>
     <template v-slot:body>
       <v-data-table
         :headers="headers"
-        :items="banners"
+        :items="urls"
         :items-per-page="5"
         class=""
         hide-default-footer
         :options="{ itemsPerPage: -1 }"
       >
-        <template v-slot:item.periodStart="{ item }">
-          {{ item.periodStart | moment('DD/MM/YYYY') }}
-        </template>
-        <template v-slot:item.periodEnd="{ item }">
-          {{ item.periodEnd | moment('DD/MM/YYYY') }}
-        </template>
         <template v-slot:item.actions="{ item }">
           <v-chip :color="'success'" dark>
             {{ item.status }}
@@ -45,7 +31,7 @@
 <script>
 export default {
   props: {
-    banners: {
+    urls: {
       type: Array,
       default: () => [],
       required: true,
@@ -57,15 +43,22 @@ export default {
       headers: [
         {
           text: 'ID',
-
-          sortable: false,
           value: 'id',
         },
-        { text: 'Nome', value: 'name' },
-        { text: 'Início', value: 'periodStart' },
-        { text: 'Fim', value: 'periodEnd' },
-        { text: 'Status', value: 'status' },
-        { text: 'Ações', sortable: false, value: 'actions' },
+
+        {
+          text: 'Nome',
+          value: 'name',
+        },
+        {
+          text: 'Link',
+          value: 'link',
+        },
+        {
+          text: 'Ações',
+          sortable: false,
+          value: 'actions',
+        },
       ],
     }
   },

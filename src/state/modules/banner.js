@@ -27,11 +27,23 @@ export const state = {
   ],
 }
 
-export const getters = {}
+export const getters = {
+  banner: (state) => state.banner,
+}
 
 export const mutations = {
   SET_BANNERS(state, banners) {
     state.banners = banners
+  },
+  CLEAR_BANNER(state) {
+    state.banner = {
+      id: null,
+      name: '',
+      periodStart: '',
+      periodEnd: '',
+      status: '',
+      html: '',
+    }
   },
 }
 
@@ -42,5 +54,8 @@ export const actions = {
       commit('SET_BANNERS', banners)
       return Promise.resolve(banners)
     })
+  },
+  clearBanner({ commit }) {
+    commit('CLEAR_BANNER')
   },
 }
