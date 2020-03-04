@@ -102,7 +102,15 @@ export default [
               routerName: 'banner',
             },
           ],
+          tmp: {},
+          beforeResolve(routeTo, routeFrom, next) {
+            store.dispatch('banner/fetchBanner').then((banner) => {
+              routeTo.meta.tmp.banner = banner
+            })
+            next()
+          },
         },
+        props: (route) => ({ banner: route.meta.tmp.banner }),
         component: () =>
           lazyLoadView(import(`@views/configuration/banner/banner.vue`)),
       },

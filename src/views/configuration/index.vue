@@ -1,6 +1,8 @@
 <template>
   <Layout>
-    <RouterView :key="$route.fullPath" />
+    <div>
+      <RouterView :key="$route.fullPath" />
+    </div>
   </Layout>
 </template>
 

@@ -35,6 +35,9 @@ export const mutations = {
   SET_BANNERS(state, banners) {
     state.banners = banners
   },
+  SET_BANNER(state, banner) {
+    state.banner = banner
+  },
   CLEAR_BANNER(state) {
     state.banner = {
       id: null,
@@ -57,5 +60,13 @@ export const actions = {
   },
   clearBanner({ commit }) {
     commit('CLEAR_BANNER')
+  },
+  fetchBanner({ commit }, id) {
+    commit('CLEAR_BANNER')
+    return axios.get(`banners/${id}`).then((response) => {
+      const banner = response.data
+      commit('SET_BANNERS', banner)
+      return Promise.resolve(banner)
+    })
   },
 }

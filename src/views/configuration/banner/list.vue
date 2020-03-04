@@ -34,15 +34,23 @@
           {{ item.periodEnd | moment('DD/MM/YYYY') }}
         </template>
         <template v-slot:item.actions="{ item }">
-          <v-chip :color="'success'" dark>
-            {{ item.status }}
-          </v-chip>
+          <BaseMenuActions v-slot:links>
+            <template>
+              <VListItem :to="{ name: 'bannerEdit', params: { id: item.id } }"
+                ><VListItemTitle>editar</VListItemTitle>
+              </VListItem>
+              <VListItem @click="sendConfimation(item)"
+                ><VListItemTitle>deletar</VListItemTitle>
+              </VListItem>
+            </template>
+          </BaseMenuActions>
         </template>
       </v-data-table>
     </template>
   </BaseCard>
 </template>
 <script>
+import { confirmationMethods, alertMethods } from '@state/helpers'
 export default {
   props: {
     banners: {
@@ -68,6 +76,27 @@ export default {
         { text: 'Ações', sortable: false, value: 'actions' },
       ],
     }
+  },
+  methods: {
+    ...confirmationMethods,
+    ...alertMethods,
+    sendConfimation(item) {
+      this.setConfirmation({
+        description: `Confirma a exclusão do banner ${item.name} ?`,
+        title:
+          'Atenção! Antes de remover o banner, confira se as referências foram removidas dos templates.',
+        promise: this.delete,
+        params: { item },
+      })
+    },
+    delete({ item }) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve(null)
+          this.newAlert(`deletado com sucesso ${item.name}`)
+        }, 3000)
+      })
+    },
   },
 }
 </script>

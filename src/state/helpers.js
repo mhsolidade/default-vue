@@ -25,7 +25,13 @@ export const alertComputde = {
 export const alertMethods = mapActions('alert', ['newAlert'])
 
 export const confirmationComputde = {
-  ...mapGetters('confirmation', ['description', 'title', 'promise', 'active']),
+  ...mapGetters('confirmation', [
+    'description',
+    'title',
+    'promise',
+    'active',
+    'params',
+  ]),
 }
 
 export const confirmationMethods = mapActions('confirmation', [

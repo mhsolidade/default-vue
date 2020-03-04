@@ -1,9 +1,11 @@
 <template>
-  <VDialog :value="active" persistent max-width="400">
+  <VDialog :value="active" persistent max-width="530">
     <VCard>
-      <VCardTitle class="headline">
-        {{ title }}
-      </VCardTitle>
+      <div class="pa-4">
+        <span class=" title ">
+          {{ title }}
+        </span>
+      </div>
       <VCardText>
         {{ description }}
       </VCardText>
@@ -35,7 +37,7 @@ export default {
     ...confirmationMethods,
     async confirmed() {
       this.loading = true
-      await this.promise()
+      await this.promise({ ...this.params })
       this.sendCancel()
     },
     sendCancel() {
