@@ -48,6 +48,10 @@ export const mutations = {
       html: '',
     }
   },
+  REMOVE_BANNER_FROM_LIST(state, id) {
+    const index = state.banners.findIndex((item) => item.id === id)
+    state.banners.splice(index, 1)
+  },
 }
 
 export const actions = {
@@ -65,7 +69,14 @@ export const actions = {
     commit('CLEAR_BANNER')
     return axios.get(`banners/${id}`).then((response) => {
       const banner = response.data
-      commit('SET_BANNERS', banner)
+      commit('SET_BANNER', banner)
+      return Promise.resolve(banner)
+    })
+  },
+  deleteBanner({ commit }, id) {
+    return axios.delete(`banners/${id}`).then((response) => {
+      const banner = response.data
+      commit('REMOVE_BANNER_FROM_LIST', banner.id)
       return Promise.resolve(banner)
     })
   },

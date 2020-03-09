@@ -2,16 +2,16 @@
   <BaseCard>
     <template v-slot:title>
       <VRow>
-        <VCol cols="10" class="headline" justify="center">
+        <VCol cols="10" sm="8" class="headline" justify="center">
           Banners
         </VCol>
-        <VCol cols="2" class="headline" align-self="center">
-          <v-checkbox
-            v-model="checkbox"
+        <VCol cols="2" sm="4" class="headline" align-self="center">
+          <VCheckbox
+            v-model="showInactive"
             hide-details
             class="ma-0 pa-0"
             :label="`Exibir inativos`"
-          ></v-checkbox>
+          ></VCheckbox>
         </VCol>
       </VRow>
     </template>
@@ -21,7 +21,7 @@
     <template v-slot:body>
       <v-data-table
         :headers="headers"
-        :items="banners"
+        :items="filterBanners"
         :items-per-page="5"
         class=""
         hide-default-footer
@@ -36,7 +36,8 @@
         <template v-slot:item.actions="{ item }">
           <BaseMenuActions v-slot:links>
             <template>
-              <VListItem :to="{ name: 'bannerEdit', params: { id: item.id } }"
+              <VListItem
+                :to="{ name: 'bannerEdit', params: { bannerId: item.id } }"
                 ><VListItemTitle>editar</VListItemTitle>
               </VListItem>
               <VListItem @click="sendConfimation(item)"
@@ -61,12 +62,10 @@ export default {
   },
   data() {
     return {
-      checkbox: false,
+      showInactive: false,
       headers: [
         {
           text: 'ID',
-
-          sortable: false,
           value: 'id',
         },
         { text: 'Nome', value: 'name' },
@@ -76,6 +75,14 @@ export default {
         { text: 'Ações', sortable: false, value: 'actions' },
       ],
     }
+  },
+  computed: {
+    filterBanners() {
+      return this.banners.filter((item) => {
+        if (this.showInactive) return item.statusId === 2
+        return item.statusId !== 2
+      })
+    },
   },
   methods: {
     ...confirmationMethods,
@@ -91,10 +98,10 @@ export default {
     },
     delete({ item }) {
       return new Promise((resolve, reject) => {
-        setTimeout(() => {
+        this.$store.dispatch('banner/deleteBanner', item.id).then((resp) => {
           resolve(null)
           this.newAlert(`deletado com sucesso ${item.name}`)
-        }, 3000)
+        })
       })
     },
   },

@@ -16,12 +16,14 @@
           <VSpacer></VSpacer>
           <v-col cols="12" md="4">
             <span>Status</span>
-            <v-text-field
-              v-model="banner.name"
-              :rules="rules.name"
+            <v-select
+              v-model="banner.statusId"
+              :items="status"
+              item-text="name"
+              item-value="id"
               outlined
-              required
-            ></v-text-field>
+              :rules="rules.name"
+            ></v-select>
           </v-col>
           <VSpacer></VSpacer>
         </VRow>
@@ -29,7 +31,7 @@
           <v-col cols="12" md="6">
             <span>Result Tag</span>
             <v-text-field
-              v-model="banner.name"
+              v-model="banner.resultTag"
               :rules="rules.name"
               outlined
               required
@@ -38,21 +40,27 @@
           <VSpacer></VSpacer>
           <v-col cols="12" md="2">
             <span>Data início</span>
-            <v-text-field
-              v-model="banner.name"
-              :rules="rules.name"
+            <BaseDatePicker
+              v-model="banner.periodStart"
+              persistent-hint
+              prepend-icon="mdi-calendar"
+              readonly
               outlined
               required
-            ></v-text-field>
+              :rules="rules.name"
+            />
           </v-col>
           <v-col cols="12" md="2">
             <span>Data Término</span>
-            <v-text-field
-              v-model="banner.name"
-              :rules="rules.name"
+            <BaseDatePicker
+              v-model="banner.periodEnd"
+              persistent-hint
+              prepend-icon="mdi-calendar"
+              readonly
               outlined
               required
-            ></v-text-field>
+              :rules="rules.name"
+            />
           </v-col>
           <VSpacer></VSpacer>
         </VRow>
@@ -60,6 +68,7 @@
           <VCol cols="12" md="11">
             <span>HTML</span>
             <v-textarea
+              v-model="banner.html"
               class="mt-0"
               rows="15"
               row-height="20"
@@ -96,6 +105,11 @@ export default {
       rules: {
         name: [(v) => !!v || 'Preencha o nome'],
       },
+      status: [
+        { id: 1, name: 'Ativo' },
+        { id: 3, name: 'Inativo' },
+        { id: 2, name: 'Testado' },
+      ],
     }
   },
 }

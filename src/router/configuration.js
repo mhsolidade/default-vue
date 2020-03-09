@@ -87,26 +87,34 @@ export default [
           lazyLoadView(import(`@views/configuration/banner/banner.vue`)),
       },
       {
-        path: ':id',
+        path: ':bannerId',
         name: 'bannerEdit',
         meta: {
-          bradcrumb: [
-            {
-              text: 'Configurações',
-              disabled: false,
-              routerName: 'configuration',
-            },
-            {
-              text: 'Banners',
-              disabled: false,
-              routerName: 'banner',
-            },
-          ],
+          bradcrumb: [],
           tmp: {},
-          beforeResolve(routeTo, routeFrom, next) {
-            store.dispatch('banner/fetchBanner').then((banner) => {
-              routeTo.meta.tmp.banner = banner
-            })
+          async beforeResolve(routeTo, routeFrom, next) {
+            await store
+              .dispatch('banner/fetchBanner', routeTo.params.bannerId)
+              .then((banner) => {
+                routeTo.meta.tmp.banner = banner
+                routeTo.meta.bradcrumb = [
+                  {
+                    text: 'Configurações',
+                    disabled: false,
+                    routerName: 'configuration',
+                  },
+                  {
+                    text: 'Banners',
+                    disabled: false,
+                    routerName: 'banner',
+                  },
+                  {
+                    text: banner.name,
+                    disabled: false,
+                    routerName: 'bannerEdit',
+                  },
+                ]
+              })
             next()
           },
         },

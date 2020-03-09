@@ -38,3 +38,10 @@ export const confirmationMethods = mapActions('confirmation', [
   'setConfirmation',
   'cancel',
 ])
+
+export const bannerComputed = {
+  ...mapState('banner', {
+    banner: (state) => state.banner,
+  }),
+  // ...mapGetters('banner', ['banner']),
+}
