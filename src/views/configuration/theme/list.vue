@@ -20,15 +20,24 @@
         :options="{ itemsPerPage: -1 }"
       >
         <template v-slot:item.actions="{ item }">
-          <v-chip :color="'success'" dark>
-            {{ item.status }}
-          </v-chip>
+          <BaseMenuActions v-slot:links>
+            <template>
+              <VListItem :to="{ name: 'themeEdit', params: { id: item.id } }"
+                ><VListItemTitle>editar</VListItemTitle>
+              </VListItem>
+              <VListItem @click="sendConfimation(item)"
+                ><VListItemTitle>deletar</VListItemTitle>
+              </VListItem>
+            </template>
+          </BaseMenuActions>
         </template>
       </v-data-table>
     </template>
   </BaseCard>
 </template>
 <script>
+import { confirmationMethods, alertMethods } from '@state/helpers'
+
 export default {
   props: {
     themes: {
@@ -57,6 +66,26 @@ export default {
         },
       ],
     }
+  },
+  methods: {
+    ...confirmationMethods,
+    ...alertMethods,
+    sendConfimation(item) {
+      this.setConfirmation({
+        description: `Confirma a exclusão do Tema ${item.name} ?`,
+        title: 'Atenção! Antes de remover o Tema.',
+        promise: this.delete,
+        params: { item },
+      })
+    },
+    delete({ item }) {
+      return new Promise((resolve, reject) => {
+        this.$store.dispatch('theme/deleteTheme', item.id).then((resp) => {
+          resolve(null)
+          this.newAlert(`deletado com sucesso ${item.name}`)
+        })
+      })
+    },
   },
 }
 </script>

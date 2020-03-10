@@ -26,6 +26,9 @@ export const mutations = {
   SET_URLS(state, urls) {
     state.urls = urls
   },
+  SET_URL(state, url) {
+    state.url = url
+  },
   CLEAR_URL(state) {
     state.url = {
       id: null,
@@ -33,11 +36,15 @@ export const mutations = {
       html: '',
     }
   },
+  REMOVE_URL_FROM_LIST(state, id) {
+    const index = state.urls.findIndex((item) => item.id === id)
+    state.urls.splice(index, 1)
+  },
 }
 
 export const actions = {
   fetchUrls({ commit }) {
-    return axios.get(`url`).then((response) => {
+    return axios.get(`urls`).then((response) => {
       const urls = response.data
       commit('SET_URLS', urls)
       return Promise.resolve(urls)
@@ -45,5 +52,19 @@ export const actions = {
   },
   clearUrl({ commit }) {
     commit('CLEAR_URL')
+  },
+  fetchUrl({ commit }, id) {
+    return axios.get(`urls/${id}`).then((response) => {
+      const url = response.data
+      commit('SET_URL', url)
+      return Promise.resolve(url)
+    })
+  },
+  deleteUrl({ commit }, id) {
+    return axios.delete(`urls/${id}`).then((response) => {
+      const url = response.data
+      commit('REMOVE_URL_FROM_LIST', url.id)
+      return Promise.resolve(url)
+    })
   },
 }

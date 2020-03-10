@@ -20,6 +20,7 @@
           <VCol cols="12" md="11">
             <span>HTML - Header</span>
             <v-textarea
+              v-model="theme.htmlHeader"
               class="mt-0"
               rows="10"
               row-height="20"
@@ -33,6 +34,7 @@
           <VCol cols="12" md="11">
             <span>HTML - Footer</span>
             <v-textarea
+              v-model="theme.htmlFooter"
               class="mt-0"
               rows="10"
               row-height="20"

@@ -1,8 +1,10 @@
 <template>
   <Layout>
-    <div>
-      <RouterView :key="$route.fullPath" />
-    </div>
+    <VRow justify="center">
+      <VCol cols="12" md="10">
+        <RouterView :key="$route.fullPath" />
+      </VCol>
+    </VRow>
   </Layout>
 </template>
 

@@ -20,6 +20,7 @@
           <VCol cols="12" md="11">
             <span>Link</span>
             <v-textarea
+              v-model="url.link"
               class="mt-0"
               rows="2"
               row-height="20"

@@ -1,7 +1,7 @@
 <template>
   <VMenu offset-y>
     <template v-slot:activator="{ on }">
-      <VBtn icon color="primary" dark v-on="on">
+      <VBtn icon color="grey darken-2" dark v-on="on">
         <VIcon>mdi-pencil-outline</VIcon>
       </VBtn>
     </template>

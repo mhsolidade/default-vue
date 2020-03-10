@@ -91,6 +91,8 @@
   </BaseCard>
 </template>
 <script>
+import { confirmationMethods, alertMethods } from '@state/helpers'
+
 export default {
   props: {
     banner: {
@@ -111,6 +113,27 @@ export default {
         { id: 2, name: 'Testado' },
       ],
     }
+  },
+  methods: {
+    ...confirmationMethods,
+    ...alertMethods,
+    sendConfimation(item) {
+      this.setConfirmation({
+        description: `Confirma a exclusão do banner ${item.name} ?`,
+        title:
+          'Atenção! Antes de remover o banner, confira se as referências foram removidas dos templates.',
+        promise: this.delete,
+        params: { item },
+      })
+    },
+    delete({ item }) {
+      return new Promise((resolve, reject) => {
+        this.$store.dispatch('banner/deleteBanner', item.id).then((resp) => {
+          resolve(null)
+          this.newAlert(`deletado com sucesso ${item.name}`)
+        })
+      })
+    },
   },
 }
 </script>

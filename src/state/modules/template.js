@@ -26,6 +26,9 @@ export const mutations = {
   SET_TEMPLATES(state, templates) {
     state.templates = templates
   },
+  SET_TEMPLATE(state, template) {
+    state.template = template
+  },
   CLEAR_TEMPLATE(state) {
     state.template = {
       id: null,
@@ -33,11 +36,15 @@ export const mutations = {
       html: '',
     }
   },
+  REMOVE_TEMPLATE_FROM_LIST(state, id) {
+    const index = state.templates.findIndex((item) => item.id === id)
+    state.templates.splice(index, 1)
+  },
 }
 
 export const actions = {
   fetchTemplates({ commit }) {
-    return axios.get(`themes`).then((response) => {
+    return axios.get(`templates`).then((response) => {
       const templates = response.data
       commit('SET_TEMPLATES', templates)
       return Promise.resolve(templates)
@@ -45,5 +52,19 @@ export const actions = {
   },
   clearTemplate({ commit }) {
     commit('CLEAR_TEMPLATE')
+  },
+  fetchTemplate({ commit }, id) {
+    return axios.get(`templates/${id}`).then((response) => {
+      const template = response.data
+      commit('SET_TEMPLATE', template)
+      return Promise.resolve(template)
+    })
+  },
+  deleteTemplate({ commit }, id) {
+    return axios.delete(`templates/${id}`).then((response) => {
+      const template = response.data
+      commit('REMOVE_TEMPLATE_FROM_LIST', template.id)
+      return Promise.resolve(template)
+    })
   },
 }

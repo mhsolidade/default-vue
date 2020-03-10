@@ -199,24 +199,35 @@ export default [
         path: ':id',
         name: 'themeEdit',
         meta: {
-          bradcrumb: [
-            {
-              text: 'Configurações',
-              disabled: false,
-              routerName: 'configuration',
-            },
-            {
-              text: 'Temas',
-              disabled: false,
-              routerName: 'theme',
-            },
-            {
-              text: 'Novo',
-              disabled: true,
-              routerName: 'themeEdit',
-            },
-          ],
+          bradcrumb: [],
+          tmp: {},
+          async beforeResolve(routeTo, routeFrom, next) {
+            await store
+              .dispatch('theme/fetchTheme', routeTo.params.id)
+              .then((theme) => {
+                routeTo.meta.tmp.theme = theme
+                routeTo.meta.bradcrumb = [
+                  {
+                    text: 'Configurações',
+                    disabled: false,
+                    routerName: 'configuration',
+                  },
+                  {
+                    text: 'Temas',
+                    disabled: false,
+                    routerName: 'theme',
+                  },
+                  {
+                    text: theme.name,
+                    disabled: true,
+                    routerName: 'themeEdit',
+                  },
+                ]
+              })
+            next()
+          },
         },
+        props: (route) => ({ theme: route.meta.tmp.theme }),
         component: () =>
           lazyLoadView(import(`@views/configuration/theme/theme.vue`)),
       },
@@ -297,24 +308,37 @@ export default [
         path: ':id',
         name: 'templateEdit',
         meta: {
-          bradcrumb: [
-            {
-              text: 'Configurações',
-              disabled: false,
-              routerName: 'configuration',
-            },
-            {
-              text: 'Templates',
-              disabled: false,
-              routerName: 'template',
-            },
-            {
-              text: 'Novo',
-              disabled: true,
-              routerName: 'templateEdit',
-            },
-          ],
+          bradcrumb: [],
+          tmp: {},
+          async beforeResolve(routeTo, routeFrom, next) {
+            store.dispatch('template/clearTemplate')
+
+            await store
+              .dispatch('template/fetchTemplate', routeTo.params.id)
+              .then((template) => {
+                routeTo.meta.tmp.template = template
+                routeTo.meta.bradcrumb = [
+                  {
+                    text: 'Configurações',
+                    disabled: false,
+                    routerName: 'configuration',
+                  },
+                  {
+                    text: 'Templates',
+                    disabled: false,
+                    routerName: 'template',
+                  },
+                  {
+                    text: template.name,
+                    disabled: false,
+                    routerName: 'templateEdit',
+                  },
+                ]
+              })
+            next()
+          },
         },
+        props: (route) => ({ template: route.meta.tmp.template }),
         component: () =>
           lazyLoadView(import(`@views/configuration/template/template.vue`)),
       },
@@ -411,7 +435,34 @@ export default [
               routerName: 'urlEdit',
             },
           ],
+          tmp: {},
+          async beforeResolve(routeTo, routeFrom, next) {
+            await store
+              .dispatch('url/fetchUrl', routeTo.params.id)
+              .then((url) => {
+                routeTo.meta.tmp.url = url
+                routeTo.meta.bradcrumb = [
+                  {
+                    text: 'Configurações',
+                    disabled: false,
+                    routerName: 'configuration',
+                  },
+                  {
+                    text: 'Urls',
+                    disabled: false,
+                    routerName: 'url',
+                  },
+                  {
+                    text: url.name,
+                    disabled: true,
+                    routerName: 'urlEdit',
+                  },
+                ]
+              })
+            next()
+          },
         },
+        props: (route) => ({ url: route.meta.tmp.url }),
         component: () =>
           lazyLoadView(import(`@views/configuration/url/url.vue`)),
       },

@@ -20,6 +20,7 @@
           <VCol cols="12" md="11">
             <span>HTML</span>
             <v-textarea
+              v-model="template.html"
               class="mt-0"
               rows="10"
               row-height="20"
