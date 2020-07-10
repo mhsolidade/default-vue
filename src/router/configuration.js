@@ -12,7 +12,20 @@ export default [
           routerName: 'configuration',
         },
       ],
+      tmp: {},
+      beforeResolve(routeTo, routeFrom, next) {
+        store
+          .dispatch('baseConfig/fetchConfig')
+          .then((config) => {
+            routeTo.meta.tmp.config = config
+            next()
+          })
+          .catch(() => {
+            next({ name: '404', params: { resource: 'templates' } })
+          })
+      },
     },
+    props: (route) => ({ config: route.meta.tmp.config }),
     component: () => lazyLoadView(import(`@views/configuration/options.vue`)),
   },
   {

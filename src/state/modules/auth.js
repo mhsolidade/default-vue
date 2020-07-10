@@ -2,12 +2,18 @@ import axios from '@plugins/axios'
 
 export const state = {
   currentUser: getSavedState('auth.currentUser'),
+  token: getSavedState('auth.token'),
 }
 
 export const mutations = {
   SET_CURRENT_USER(state, newValue) {
     state.currentUser = newValue
     saveState('auth.currentUser', state.currentUser)
+    setDefaultAuthHeaders(state)
+  },
+  SET_TOKEN(state, newValue) {
+    state.token = newValue
+    saveState('auth.token', state.token)
     setDefaultAuthHeaders(state)
   },
 }
@@ -28,37 +34,56 @@ export const actions = {
   },
 
   // Logs in the current user.
-  logIn({ commit, dispatch, getters }, { username, password } = {}) {
+  async logIn({ commit, dispatch, getters }, { username, password } = {}) {
     if (getters.loggedIn) return dispatch('validate')
-    return axios.post('login', { username, password }).then((response) => {
-      const user = response.data
-      commit('SET_CURRENT_USER', user)
-      return user
-    })
+    const cookie = await axios
+      .post('/api/admin/Authenticate/login', {
+        email: 'mhsolidade@gmail.com',
+        password: 'S123456',
+        remember: true,
+      })
+      .then((response) => {
+        return response.headers.cookie
+      })
+    if (cookie.includes('laravel_session')) {
+      commit('SET_TOKEN', cookie)
+      return axios
+        .post('/api/admin/System/getOptions?system=smart')
+        .then((response) => {
+          const user = response.data.user
+          user.clientId = 'sast'
+          commit('SET_CURRENT_USER', user)
+          return user
+        })
+    } else {
+      return Promise.resolve(null)
+    }
   },
 
   // Logs out the current user.
   logOut({ commit }) {
     commit('SET_CURRENT_USER', null)
+    commit('SET_TOKEN', null)
   },
 
   // Validates the current user's token and refreshes it
   // with new data from the API.
   validate({ commit, state }) {
     if (!state.currentUser) return Promise.resolve(null)
+    if (!state.token) return Promise.resolve(null)
 
     return axios
-      .get('user')
+      .get('/api/admin/System/getOptions?system=smart')
       .then((response) => {
-        const user = Object.assign({}, response.data, {
-          token: state.currentUser.token,
-        })
+        const user = response.data.user
+        user.clientId = 'sast'
         commit('SET_CURRENT_USER', user)
         return user
       })
       .catch((error) => {
         if (error.response && error.response.status === 401) {
           commit('SET_CURRENT_USER', null)
+          commit('SET_TOKEN', null)
         } else {
           console.warn(error)
         }
@@ -80,7 +105,7 @@ function saveState(key, state) {
 }
 
 function setDefaultAuthHeaders(state) {
-  axios.defaults.headers.common.Authorization = state.currentUser
-    ? `Bearer ${state.currentUser.token.accessToken}`
+  axios.defaults.headers.common.Authorization = state.token
+    ? `Cookie ${state.token}`
     : ''
 }

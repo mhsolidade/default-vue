@@ -4,25 +4,20 @@ export const state = {
   banner: {
     id: 1,
     name: 'Padrão',
-    periodStart: '01/02/2020',
-    periodEnd: '01/12/2020',
+    startDate: '01/02/2020',
+    endDate: '01/12/2020',
     status: 'Ativo',
     html: '',
+    description: 'description',
   },
   banners: [
     {
       id: 1,
-      name: 'Padrão 02',
-      periodStart: '01/02/2020',
-      periodEnd: '01/12/2020',
+      name: 'Exemplo',
+      startDate: '01/02/1999',
+      endDate: '01/12/1999',
       status: 'Ativo',
-    },
-    {
-      id: 2,
-      name: 'Padrão 02',
-      periodStart: '01/02/2020',
-      periodEnd: '01/12/2020',
-      status: 'Ativo',
+      description: 'description',
     },
   ],
 }
@@ -42,10 +37,11 @@ export const mutations = {
     state.banner = {
       id: null,
       name: '',
-      periodStart: '',
-      periodEnd: '',
+      startDate: '',
+      endDate: '',
       status: '',
       html: '',
+      description: 'description',
     }
   },
   REMOVE_BANNER_FROM_LIST(state, id) {
@@ -55,29 +51,58 @@ export const mutations = {
 }
 
 export const actions = {
-  fetchBanners({ commit }) {
-    return axios.get(`banners`).then((response) => {
-      const banners = response.data
-      commit('SET_BANNERS', banners)
-      return Promise.resolve(banners)
-    })
+  fetchBanners({ commit, rootState }) {
+    const { clientId } = rootState.auth.currentUser
+    return axios
+      .get(`/api/smart/banner?clientId=${clientId}`)
+      .then((response) => {
+        const banners = response.data.data
+        commit('SET_BANNERS', banners)
+        return Promise.resolve(banners)
+      })
   },
   clearBanner({ commit }) {
     commit('CLEAR_BANNER')
   },
-  fetchBanner({ commit }, id) {
+  fetchBanner({ commit, rootState }, id) {
     commit('CLEAR_BANNER')
-    return axios.get(`banners/${id}`).then((response) => {
+    return axios.get(`/api/smart/banner/${id}?id=${id}`).then((response) => {
       const banner = response.data
       commit('SET_BANNER', banner)
       return Promise.resolve(banner)
     })
   },
-  deleteBanner({ commit }, id) {
-    return axios.delete(`banners/${id}`).then((response) => {
-      const banner = response.data
-      commit('REMOVE_BANNER_FROM_LIST', banner.id)
-      return Promise.resolve(banner)
-    })
+  deleteBanner({ commit, rootState }, id) {
+    const { clientId } = rootState.auth.currentUser
+    return axios
+      .delete(`/api/smart/banner/${id}?client_id=${clientId}`)
+      .then((response) => {
+        const banner = response.data
+        commit('REMOVE_BANNER_FROM_LIST', banner.id)
+        return Promise.resolve(banner)
+      })
+  },
+  updateBanner({ commit, rootState }, bannerSend) {
+    const { clientId } = rootState.auth.currentUser
+    bannerSend.client_id = clientId
+    return axios
+      .put(
+        `/api/smart/banner/${bannerSend.id}?client_id=${clientId}`,
+        bannerSend
+      )
+      .then((response) => {
+        const banner = bannerSend
+        return Promise.resolve(banner)
+      })
+  },
+  createBanner({ commit, rootState }, bannerSend) {
+    const { clientId } = rootState.auth.currentUser
+    bannerSend.client_id = clientId
+    return axios
+      .post(`/api/smart/banner?client_id=${clientId}`, bannerSend)
+      .then((response) => {
+        const banner = bannerSend
+        return Promise.resolve(banner)
+      })
   },
 }

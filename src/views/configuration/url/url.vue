@@ -9,6 +9,7 @@
             <v-text-field
               v-model="url.name"
               :rules="rules.name"
+              counter="20"
               outlined
               required
             ></v-text-field>
@@ -21,6 +22,7 @@
             <span>Link</span>
             <v-textarea
               v-model="url.link"
+              :rules="rules.isLink"
               class="mt-0"
               rows="2"
               row-height="20"
@@ -32,7 +34,7 @@
         </VRow>
         <VRow class="">
           <VCol cols="12" sm="2">
-            <VBtn block outlined>Savar</VBtn>
+            <VBtn block outlined @click="createdOrUpdate">Savar</VBtn>
           </VCol>
         </VRow>
       </v-form>
@@ -40,6 +42,8 @@
   </BaseCard>
 </template>
 <script>
+import { alertMethods } from '@state/helpers'
+
 export default {
   props: {
     url: {
@@ -51,10 +55,34 @@ export default {
   data() {
     return {
       valid: false,
+      // eslint-disable-next-line no-useless-escape
+      regxLink: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/,
       rules: {
         name: [(v) => !!v || 'Preencha o nome'],
+        isLink: [(v) => !!this.regxLink.test(v) || 'Link Inválido.'],
       },
     }
+  },
+  methods: {
+    ...alertMethods,
+    createdOrUpdate() {
+      if (this.url.id) {
+        this.updated()
+      } else {
+        this.created()
+      }
+    },
+    created() {
+      this.$store.dispatch('url/createUrl', this.url).then((resp) => {
+        this.newAlert(`Url criada com sucesso ${this.url.name}`)
+        this.$router.push({ name: 'url' })
+      })
+    },
+    updated() {
+      this.$store.dispatch('url/updateUrl', this.url).then((resp) => {
+        this.newAlert(`Url atualizada com sucesso ${this.url.name}`)
+      })
+    },
   },
 }
 </script>

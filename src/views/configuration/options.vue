@@ -15,10 +15,13 @@
       >
         <template v-slot:action>
           <VCol align-self="center">
-            <VTextField label="Regular"></VTextField>
+            <VTextField
+              v-model="config.dailyEmailLimit"
+              label="Limite diário"
+            ></VTextField>
           </VCol>
           <VCol align-self="center">
-            <VBtn color="white" block>Salvar</VBtn>
+            <VBtn color="white" block @click="saveDailyEmailLimit">Salvar</VBtn>
           </VCol>
         </template>
       </configurationLink>
@@ -45,9 +48,23 @@
 </template>
 <script>
 import configurationLink from '@components/configuration-link.vue'
+import { baseConfigMethods } from '@state/helpers'
 export default {
   components: {
     configurationLink,
+  },
+  props: {
+    config: {
+      type: Object,
+      default: () => {},
+      required: true,
+    },
+  },
+  methods: {
+    ...baseConfigMethods,
+    saveDailyEmailLimit() {
+      this.updateConfig(this.config)
+    },
   },
 }
 </script>

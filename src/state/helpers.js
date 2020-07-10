@@ -45,3 +45,14 @@ export const bannerComputed = {
   }),
   // ...mapGetters('banner', ['banner']),
 }
+
+export const baseConfigComputed = {
+  ...mapState('baseConfig', {
+    baseConfig: (state) => state.baseConfig,
+  }),
+  ...mapGetters('baseConfig', ['baseConfig']),
+}
+export const baseConfigMethods = mapActions('baseConfig', [
+  'fetchConfig',
+  'updateConfig',
+])

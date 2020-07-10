@@ -27,11 +27,11 @@
         hide-default-footer
         :options="{ itemsPerPage: -1 }"
       >
-        <template v-slot:item.periodStart="{ item }">
-          {{ item.periodStart | moment('DD/MM/YYYY') }}
+        <template v-slot:item.startDate="{ item }">
+          {{ item.startDate | moment('DD/MM/YYYY') }}
         </template>
-        <template v-slot:item.periodEnd="{ item }">
-          {{ item.periodEnd | moment('DD/MM/YYYY') }}
+        <template v-slot:item.endDate="{ item }">
+          {{ item.endDate | moment('DD/MM/YYYY') }}
         </template>
         <template v-slot:item.actions="{ item }">
           <BaseMenuActions v-slot:links>
@@ -69,8 +69,8 @@ export default {
           value: 'id',
         },
         { text: 'Nome', value: 'name' },
-        { text: 'Início', value: 'periodStart' },
-        { text: 'Fim', value: 'periodEnd' },
+        { text: 'Início', value: 'startDate' },
+        { text: 'Fim', value: 'endDate' },
         { text: 'Status', value: 'status' },
         { text: 'Ações', sortable: false, value: 'actions' },
       ],
@@ -79,8 +79,8 @@ export default {
   computed: {
     filterBanners() {
       return this.banners.filter((item) => {
-        if (this.showInactive) return item.statusId === 2
-        return item.statusId !== 2
+        if (this.showInactive) return item.status !== 'enabled'
+        return item.status === 'enabled'
       })
     },
   },

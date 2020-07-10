@@ -1,4 +1,6 @@
 const appConfig = require('./src/app.config')
+// eslint-disable-next-line prefer-const
+let cookie = null
 
 /** @type import('@vue/cli-service').ProjectOptions */
 module.exports = {
@@ -30,10 +32,41 @@ module.exports = {
   // Configure Webpack's dev server.
   // https://cli.vuejs.org/guide/cli-service.html
   devServer: {
-    ...(process.env.API_BASE_URL
-      ? // Proxy API endpoints to the production base URL.
-        { proxy: { '/api': { target: process.env.API_BASE_URL } } }
-      : // Proxy API endpoints a local mock API.
-        {}),
+    proxy: {
+      '/api': {
+        target: 'http://painel.smartbmc.com.br',
+        changeOrigin: true,
+        cookieDomainRewrite: {
+          '*': 'localhost',
+        },
+        onProxyRes: (proxyRes, req, res) => {
+          const sc = proxyRes.headers['set-cookie']
+          if (Array.isArray(sc)) {
+            const cookie = sc.map((sc) => {
+              return sc.split(';')
+            })
+            res.append('cookie', cookie)
+            // console.log(cookie)
+          }
+        },
+
+        pathRewrite: function(path, req) {
+          return path.replace('/api', '/api')
+        },
+      },
+    },
+    // ...(process.env.API_BASE_URL
+    //   ? // Proxy API endpoints to the production base URL.
+    //     { proxy: { '/api': { target: process.env.API_BASE_URL } } }
+    //   : // Proxy API endpoints a local mock API.
+    //     {}),
   },
 }
+
+// Object.keys(proxyRes.headers).forEach(function(key) {
+//   if (key === 'set-cookie') {
+//     console.log(proxyRes.headers[key].map(item => ))
+//     res.append('set-cookie', proxyRes.headers[key].split(','))
+//   }
+// })
+// },

@@ -50,6 +50,7 @@ module.exports = {
     ],
     'vue/valid-v-slot': 'off',
     'vue/attribute-hyphenation': 'off',
+    'vue/no-v-html': 'off',
   },
   overrides: [
     {

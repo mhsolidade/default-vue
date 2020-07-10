@@ -17,10 +17,10 @@
           <v-col cols="12" md="4">
             <span>Status</span>
             <v-select
-              v-model="banner.statusId"
+              v-model="banner.status"
               :items="status"
               item-text="name"
-              item-value="id"
+              item-value="value"
               outlined
               :rules="rules.name"
             ></v-select>
@@ -30,18 +30,13 @@
         <VRow justify="space-around">
           <v-col cols="12" md="6">
             <span>Result Tag</span>
-            <v-text-field
-              v-model="banner.resultTag"
-              :rules="rules.name"
-              outlined
-              required
-            ></v-text-field>
+            <v-text-field :value="resultTag" disabled outlined></v-text-field>
           </v-col>
           <VSpacer></VSpacer>
           <v-col cols="12" md="2">
             <span>Data início</span>
             <BaseDatePicker
-              v-model="banner.periodStart"
+              v-model="banner.startDate"
               persistent-hint
               prepend-icon="mdi-calendar"
               readonly
@@ -53,7 +48,7 @@
           <v-col cols="12" md="2">
             <span>Data Término</span>
             <BaseDatePicker
-              v-model="banner.periodEnd"
+              v-model="banner.endDate"
               persistent-hint
               prepend-icon="mdi-calendar"
               readonly
@@ -80,20 +75,26 @@
         </VRow>
         <VRow class="">
           <VCol cols="12" sm="2">
-            <VBtn block outlined>Visualizar</VBtn>
+            <VBtn block outlined @click="showPreview = !showPreview">
+              Visualizar
+            </VBtn>
           </VCol>
           <VCol cols="12" sm="2">
-            <VBtn block outlined>Savar</VBtn>
+            <VBtn block outlined @click="save">Savar</VBtn>
           </VCol>
         </VRow>
       </v-form>
+      <SmartPreview v-model="showPreview" :html="banner.html"></SmartPreview>
     </template>
   </BaseCard>
 </template>
 <script>
 import { confirmationMethods, alertMethods } from '@state/helpers'
-
+import SmartPreview from './preview.vue'
 export default {
+  components: {
+    SmartPreview,
+  },
   props: {
     banner: {
       type: Object,
@@ -104,15 +105,21 @@ export default {
   data() {
     return {
       valid: false,
+      showPreview: false,
       rules: {
         name: [(v) => !!v || 'Preencha o nome'],
       },
       status: [
-        { id: 1, name: 'Ativo' },
-        { id: 3, name: 'Inativo' },
-        { id: 2, name: 'Testado' },
+        { value: 'enabled', name: 'Ativo' },
+        { value: 'disabled', name: 'Inativo' },
+        { value: 'testing', name: 'Testado' },
       ],
     }
+  },
+  computed: {
+    resultTag() {
+      return `{{banners.'${this.banner.name}'}}`
+    },
   },
   methods: {
     ...confirmationMethods,
@@ -132,6 +139,24 @@ export default {
           resolve(null)
           this.newAlert(`deletado com sucesso ${item.name}`)
         })
+      })
+    },
+    save() {
+      if (this.banner.id) {
+        this.updated()
+      } else {
+        this.createBanner()
+      }
+    },
+    createBanner() {
+      this.$store.dispatch('banner/createBanner', this.banner).then((resp) => {
+        this.newAlert(`Banner criado com sucesso ${this.banner.name}`)
+        this.$router.push({ name: 'banner' })
+      })
+    },
+    updated() {
+      this.$store.dispatch('banner/updateBanner', this.banner).then((resp) => {
+        this.newAlert(`Banner atualizado com sucesso ${this.banner.name}`)
       })
     },
   },
