@@ -56,3 +56,9 @@ export const baseConfigMethods = mapActions('baseConfig', [
   'fetchConfig',
   'updateConfig',
 ])
+export const themeMethods = mapActions('theme', [
+  'fetchThemes',
+])
+export const templateMethods = mapActions('template', [
+  'fetchTemplates',
+])

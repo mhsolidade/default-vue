@@ -6,12 +6,7 @@
         <VRow>
           <v-col cols="12" md="6">
             <span>Nome</span>
-            <v-text-field
-              v-model="theme.name"
-              :rules="rules.name"
-              outlined
-              required
-            ></v-text-field>
+            <v-text-field v-model="theme.name" :rules="rules.name" outlined required></v-text-field>
           </v-col>
           <VSpacer></VSpacer>
         </VRow>
@@ -44,12 +39,12 @@
           </VCol>
           <VSpacer></VSpacer>
         </VRow>
-        <VRow class="">
+        <VRow class>
           <VCol cols="12" sm="2">
-            <VBtn block outlined>Gerar Teste</VBtn>
+            <GeneretorTestThemeTemplate :theme="theme" />
           </VCol>
           <VCol cols="12" sm="2">
-            <VBtn block outlined>Savar</VBtn>
+            <VBtn block outlined @click="createdOrUpdate">Savar</VBtn>
           </VCol>
         </VRow>
       </v-form>
@@ -57,7 +52,12 @@
   </BaseCard>
 </template>
 <script>
+import { alertMethods } from '@state/helpers'
+import GeneretorTestThemeTemplate from '@components/generetor-test-theme-template.vue'
 export default {
+  components: {
+    GeneretorTestThemeTemplate,
+  },
   props: {
     theme: {
       type: Object,
@@ -68,10 +68,33 @@ export default {
   data() {
     return {
       valid: false,
+
       rules: {
         name: [(v) => !!v || 'Preencha o nome'],
       },
     }
+  },
+
+  methods: {
+    ...alertMethods,
+    createdOrUpdate() {
+      if (this.theme.id) {
+        this.updated()
+      } else {
+        this.created()
+      }
+    },
+    created() {
+      this.$store.dispatch('theme/createTheme', this.theme).then((resp) => {
+        this.newAlert(`Tema criado com sucesso: ${this.theme.name}`)
+        this.$router.push({ name: 'theme' })
+      })
+    },
+    updated() {
+      this.$store.dispatch('theme/updateTheme', this.theme).then((resp) => {
+        this.newAlert(`Tema atualizado com sucesso: ${this.theme.name}`)
+      })
+    },
   },
 }
 </script>

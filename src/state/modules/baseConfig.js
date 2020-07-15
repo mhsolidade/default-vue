@@ -1,5 +1,4 @@
 import axios from '@plugins/axios'
-import camelToSnake from '@utils/camel-to-snake'
 
 export const state = {
   baseConfig: {
@@ -37,12 +36,7 @@ export const actions = {
   },
   updateConfig({ commit, rootState }, config) {
     const { clientId } = rootState.auth.currentUser
-    const sendConfig = Object.assign({}, config)
-    sendConfig.config = camelToSnake(sendConfig.config)
-    sendConfig.config = JSON.stringify(sendConfig.config)
-    console.log(sendConfig)
-    sendConfig.last_click_number = 30
-    sendConfig.last_click_time = 'day'
+    const sendConfig = { dailyEmailLimit: config.dailyEmailLimit }
     return axios
       .put(`/api/smart/client/${clientId}`, sendConfig)
       .then((response) => {

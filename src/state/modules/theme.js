@@ -40,12 +40,19 @@ export const mutations = {
     const index = state.themes.findIndex((item) => item.id === id)
     state.themes.splice(index, 1)
   },
+  UPDATE_THEME_IN_LIST(state, theme) {
+    const index = state.themes.findIndex((item) => item.id === theme.id)
+    if (index !== -1) {
+      state.themes[index] = theme
+    }
+  },
 }
 
 export const actions = {
-  fetchThemes({ commit }) {
-    return axios.get(`themes`).then((response) => {
-      const themes = response.data
+  fetchThemes({ commit, rootState }) {
+    const { clientId } = rootState.auth.currentUser
+    return axios.get(`/api/sas/themes/${clientId}`).then((response) => {
+      const themes = response.data[0]
       commit('SET_THEMES', themes)
       return Promise.resolve(themes)
     })
@@ -53,18 +60,43 @@ export const actions = {
   clearTheme({ commit }) {
     commit('CLEAR_THEME')
   },
-  fetchTheme({ commit }, id) {
-    return axios.get(`themes/${id}`).then((response) => {
+  fetchTheme({ commit, rootState }, id) {
+    const { clientId } = rootState.auth.currentUser
+
+    return axios.get(`/api/sas/theme/${clientId}_${id}`).then((response) => {
       const theme = response.data
       commit('SET_THEME', theme)
       return Promise.resolve(theme)
     })
   },
-  deleteTheme({ commit }, id) {
-    return axios.delete(`themes/${id}`).then((response) => {
+  deleteTheme({ commit, rootState }, id) {
+    const { clientId } = rootState.auth.currentUser
+
+    return axios.delete(`/api/sas/theme/${clientId}_${id}`).then((response) => {
       const theme = response.data
       commit('REMOVE_THEME_FROM_LIST', theme.id)
       return Promise.resolve(theme)
+    })
+  },
+  updateTheme({ commit, rootState }, theme) {
+    const { clientId } = rootState.auth.currentUser
+    theme.clientId = clientId
+    return axios
+      .put(`/api/sas/theme/${clientId}_${theme.id}`, theme)
+      .then((response) => {
+        if (response.status === 200) {
+          commit('UPDATE_THEME_IN_LIST', theme)
+          return Promise.resolve(theme)
+        }
+      })
+  },
+  createTheme({ rootState }, theme) {
+    const { clientId } = rootState.auth.currentUser
+    theme.clientId = clientId
+    return axios.post(`/api/sas/theme`, theme).then((response) => {
+      if (response.status === 200) {
+        return Promise.resolve(theme)
+      }
     })
   },
 }

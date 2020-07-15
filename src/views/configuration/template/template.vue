@@ -6,12 +6,7 @@
         <VRow>
           <v-col cols="12" md="6">
             <span>Nome</span>
-            <v-text-field
-              v-model="template.name"
-              :rules="rules.name"
-              outlined
-              required
-            ></v-text-field>
+            <v-text-field v-model="template.name" :rules="rules.name" outlined required></v-text-field>
           </v-col>
           <VSpacer></VSpacer>
         </VRow>
@@ -30,12 +25,12 @@
           </VCol>
           <VSpacer></VSpacer>
         </VRow>
-        <VRow class="">
+        <VRow class>
           <VCol cols="12" sm="2">
-            <VBtn block outlined>Gerar Teste</VBtn>
+            <GeneretorTestThemeTemplate :template="template" />
           </VCol>
           <VCol cols="12" sm="2">
-            <VBtn block outlined>Savar</VBtn>
+            <VBtn block outlined @click="createdOrUpdate">Savar</VBtn>
           </VCol>
         </VRow>
       </v-form>
@@ -43,7 +38,13 @@
   </BaseCard>
 </template>
 <script>
+import { alertMethods } from '@state/helpers'
+import GeneretorTestThemeTemplate from '@components/generetor-test-theme-template.vue'
+
 export default {
+  components: {
+    GeneretorTestThemeTemplate,
+  },
   props: {
     template: {
       type: Object,
@@ -58,6 +59,31 @@ export default {
         name: [(v) => !!v || 'Preencha o nome'],
       },
     }
+  },
+  methods: {
+    ...alertMethods,
+    createdOrUpdate() {
+      if (this.template.id) {
+        this.updated()
+      } else {
+        this.created()
+      }
+    },
+    created() {
+      this.$store
+        .dispatch('template/createTemplate', this.template)
+        .then((resp) => {
+          this.newAlert(`Template criada com sucesso ${this.template.name}`)
+          this.$router.push({ name: 'template' })
+        })
+    },
+    updated() {
+      this.$store
+        .dispatch('template/updateTemplate', this.template)
+        .then((resp) => {
+          this.newAlert(`Template atualizada com sucesso ${this.template.name}`)
+        })
+    },
   },
 }
 </script>

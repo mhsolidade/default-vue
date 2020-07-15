@@ -10,7 +10,7 @@
             <VRow>
               <VTextField
                 v-model="username"
-                label="Usuário"
+                label="E-mail"
                 name="username"
                 prepend-icon="mdi-account"
                 type="text"
