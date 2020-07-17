@@ -1,12 +1,42 @@
+/* eslint-disable no-undef */
+// @ts-nocheck
+/* eslint-disable eqeqeq */
 import axios from '@plugins/axios'
 
 export const state = {
   trigger: {
-    id: 1,
-    name: 'Padrão',
-    link: '',
-    description: 'Padrão',
-    category: 'Padrão',
+    id: '',
+    name: '',
+    fromName: '',
+    fromEmail: '',
+    engine: '',
+    config: {
+      snippet: '',
+      nextInteraction: '',
+      sessionTimeout: '',
+      interestTtl: '',
+      firstInteraction: [''],
+      removeGlobalTracking: false,
+      intervalOfInterests: '',
+      subject: '',
+      reaction: {
+        codes: [''],
+        operator: '',
+        interactionHashUser: '',
+      },
+      subjectArray: [{ type: '', subject: '' }],
+      interestChannelDelete: [],
+    },
+    tpl: '',
+    tplTest: '',
+    status: '',
+    sort: '',
+    trash: '',
+    hasValidityDate: '',
+    validityDate: null,
+    parentChannelId: '',
+    engineName: '',
+    repique: [],
   },
   triggers: [
     {
@@ -18,10 +48,12 @@ export const state = {
       actions: null,
     },
   ],
+  disabledEngines: [],
 }
 
 export const getters = {
   trigger: (state) => state.trigger,
+  disabledEngines: (state) => state.disabledEngines,
 }
 
 export const mutations = {
@@ -33,11 +65,38 @@ export const mutations = {
   },
   CLEAR_TRIGGER(state) {
     state.trigger = {
-      id: null,
+      id: '',
       name: '',
-      link: '',
-      description: 'Padrão',
-      category: 'Padrão',
+      fromName: '',
+      fromEmail: '',
+      engine: '',
+      config: {
+        snippet: '',
+        nextInteraction: '',
+        sessionTimeout: '',
+        interestTtl: '',
+        firstInteraction: [''],
+        removeGlobalTracking: false,
+        intervalOfInterests: '',
+        subject: '',
+        reaction: {
+          codes: [''],
+          operator: '',
+          interactionHashUser: '',
+        },
+        subjectArray: [{ type: '', subject: '' }],
+        interestChannelDelete: [],
+      },
+      tpl: '',
+      tplTest: '',
+      status: '',
+      sort: '',
+      trash: '',
+      hasValidityDate: '',
+      validityDate: null,
+      parentChannelId: '',
+      engineName: '',
+      repique: [],
     }
   },
   REMOVE_TRIGGER_FROM_LIST(state, id) {
@@ -50,17 +109,32 @@ export const mutations = {
       state.urls[index] = trigger
     }
   },
+  SET_DISABLED_ENGINES(state, disabledEngines) {
+    state.disabledEngines = disabledEngines
+  },
 }
 
 export const actions = {
   fetchTriggers({ commit, rootState }) {
     const { clientId } = rootState.auth.currentUser
-    return axios.get(`/api/smart/channels/${clientId}`).then((response) => {
-      console.log(response)
-      const urls = response.data.urls
-      commit('SET_TRIGGERS', urls)
-      return Promise.resolve(urls)
-    })
+    return axios
+      .get(`/api/smart/Channels/listChannel/${clientId}`)
+      .then((response) => {
+        const triggersWithRepique = []
+        const triggers = response.data.channels
+        triggers.forEach((trigger) => {
+          if (trigger.id == 10) trigger.parentChannelId = 1
+        })
+        triggers.forEach((trigger) => {
+          trigger.repique = triggers.filter(
+            (item) => item.parentChannelId == trigger.id
+          )
+          if (trigger.parentChannelId != 0 || !trigger.parentChannelId)
+            triggersWithRepique.push(trigger)
+        })
+        commit('SET_TRIGGERS', triggers)
+        return Promise.resolve(triggers)
+      })
   },
   clearTrigger({ commit }) {
     commit('CLEAR_TRIGGER')
@@ -105,5 +179,18 @@ export const actions = {
         return Promise.resolve(trigger)
       }
     })
+  },
+  async getDisabledEnabledTriggers({ commit, dispatch }) {
+    // commit, rootState
+    const triggers = await dispatch('fetchTriggers')
+    const engines = await dispatch('engine/fetchEngines', null, { root: true })
+
+    const idEngines = await triggers.map((item) => item.engine)
+    const disabledEngines = engines.filter(
+      (item) => !idEngines.includes(item.id)
+    )
+    commit('SET_DISABLED_ENGINES', disabledEngines)
+
+    return Promise.resolve({ triggers, disabledEngines })
   },
 }

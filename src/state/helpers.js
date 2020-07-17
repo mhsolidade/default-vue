@@ -56,9 +56,14 @@ export const baseConfigMethods = mapActions('baseConfig', [
   'fetchConfig',
   'updateConfig',
 ])
-export const themeMethods = mapActions('theme', [
-  'fetchThemes',
-])
-export const templateMethods = mapActions('template', [
-  'fetchTemplates',
-])
+export const themeMethods = mapActions('theme', ['fetchThemes'])
+
+export const templateMethods = mapActions('template', ['fetchTemplates'])
+
+export const engineMethods = mapActions('engine', ['fetchEngines'])
+
+export const engineComputed = {
+  ...mapState('engine', {
+    engines: (state) => state.engines,
+  }),
+}

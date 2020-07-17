@@ -5,7 +5,7 @@
     <VContent>
       <Breadcrumbs />
       <FastAlert />
-      <VContainer fluid>
+      <VContainer fluid class="pt-0">
         <div>
           <slot />
         </div>

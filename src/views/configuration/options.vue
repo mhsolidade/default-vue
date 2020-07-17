@@ -48,7 +48,8 @@
 </template>
 <script>
 import configurationLink from '@components/configuration-link.vue'
-import { baseConfigMethods } from '@state/helpers'
+import { baseConfigMethods, alertMethods } from '@state/helpers'
+
 export default {
   components: {
     configurationLink,
@@ -62,8 +63,12 @@ export default {
   },
   methods: {
     ...baseConfigMethods,
-    saveDailyEmailLimit() {
-      this.updateConfig(this.config)
+    ...alertMethods,
+    async saveDailyEmailLimit() {
+      await this.updateConfig(this.config)
+      this.newAlert(
+        `Limite diário atualizado com sucesso: ${this.config.dailyEmailLimit}`
+      )
     },
   },
 }

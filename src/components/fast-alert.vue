@@ -1,5 +1,5 @@
 <template>
-  <v-row justify="center" style="min-height: 50px;">
+  <v-row justify="center" style="min-height: 10px;">
     <v-fade-transition mode="out-in">
       <v-alert v-show="active" class="grey lighten-4" width="100%">
         {{ text }}

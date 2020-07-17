@@ -4,17 +4,26 @@
     scrollable
     :overlay="false"
     :max-width="!!preview ? '700px' : '600px'"
-    :width="!!preview ? 'auto' : 'auto' "
-    :min-width="!!preview ? '' : 'auto' "
+    :width="!!preview ? 'auto' : 'auto'"
+    :min-width="!!preview ? '' : 'auto'"
   >
     <VCard>
-      <VBtn small absolute top right fab text class="mt-5" @click="showDialog = !showDialog">
+      <VBtn
+        small
+        absolute
+        top
+        right
+        fab
+        text
+        class="mt-5"
+        @click="showDialog = !showDialog"
+      >
         <v-icon>mdi-close</v-icon>
       </VBtn>
       <template v-if="!preview">
         <VCardText class="py-5 mt-5">
           <VSpacer></VSpacer>
-          <span>{{label}}</span>
+          <span>{{ label }}</span>
           <VSelect
             v-model="select"
             no-data-text="Lista indisponível"
