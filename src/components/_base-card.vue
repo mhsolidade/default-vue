@@ -1,5 +1,5 @@
 <template>
-  <VCard>
+  <VCard v-bind="[...$attrs.card]">
     <VCol class="grey lighten-2 px-4">
       <slot name="title">
         <VCol cols="12" class="headline" justify="center">
@@ -10,7 +10,7 @@
     <VCol v-if="!!$slots.subtitle" cols="12" class="ma-0 px-4">
       <slot name="subtitle"></slot>
     </VCol>
-    <VCardText class="py-0 px-4">
+    <VCardText v-if="!!$slots.body" class="py-0 px-4">
       <slot name="body"></slot>
     </VCardText>
   </VCard>

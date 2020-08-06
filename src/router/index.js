@@ -26,14 +26,14 @@ const router = new VueRouter({
 })
 
 // Before each route evaluates...
-router.beforeEach((routeTo, routeFrom, next) => {
+router.beforeEach(async (routeTo, routeFrom, next) => {
   // If this isn't an initial page load...
   if (routeFrom.name !== null) {
     // Start the route progress bar.
     NProgress.configure({
       showSpinner: false,
       trickleSpeed: 1,
-      speed: 600,
+      speed: 900,
     })
     NProgress.start()
   }
@@ -47,11 +47,16 @@ router.beforeEach((routeTo, routeFrom, next) => {
   // If auth is required and the user is logged in...
   if (store.getters['auth/loggedIn']) {
     // Validate the local user token...
-    return store.dispatch('auth/validate').then((validUser) => {
-      // Then continue if the token still represents a valid user,
-      // otherwise redirect to login.
-      validUser ? next() : redirectToLogin()
-    })
+    const validUser = await store.dispatch('auth/validate')
+
+    if (!validUser) return redirectToLogin()
+
+    const clientIdRequired = routeTo.matched.some(
+      (route) => route.meta.clientIdRequired
+    )
+    if (!clientIdRequired) return next()
+    if (store.getters['client/isSetClientId']) return next()
+    return redirectToSelectClientId()
   }
 
   // If auth is required and the user is NOT currently logged in,
@@ -61,6 +66,11 @@ router.beforeEach((routeTo, routeFrom, next) => {
   function redirectToLogin() {
     // Pass the original route to the login component
     next({ name: 'login', query: { redirectFrom: routeTo.fullPath } })
+  }
+  function redirectToSelectClientId() {
+    // Pass the original route to the login component
+    if (routeFrom.name === 'client') NProgress.done()
+    next({ name: 'client', query: { redirectFrom: routeTo.fullPath } })
   }
 })
 
@@ -109,6 +119,7 @@ router.beforeResolve(async (routeTo, routeFrom, next) => {
 })
 // When each route is finished evaluating...
 router.afterEach((routeTo, routeFrom) => {
+  console.log('afterEach')
   // Complete the animation of the route progress bar.
   NProgress.done()
 })

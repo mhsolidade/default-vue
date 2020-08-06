@@ -1,28 +1,31 @@
 <template>
-  <v-menu
-    ref="menu"
-    v-model="menu"
-    :close-on-content-click="false"
-    transition="scale-transition"
-    offset-y
-    max-width="290px"
-    min-width="290px"
-  >
-    <template v-slot:activator="{ on }">
-      <v-text-field
-        v-model="dateFormatted"
-        v-bind="$attrs"
-        v-on="on"
-      ></v-text-field>
-      <!-- @blur="date = parseDate(dateFormatted)" -->
-    </template>
-    <v-date-picker
-      v-model="date"
-      no-title
-      locale="pt-br"
-      @input="menu = false"
-    ></v-date-picker>
-  </v-menu>
+  <div>
+    <v-menu
+      ref="menu"
+      v-model="menu"
+      :close-on-content-click="false"
+      transition="scale-transition"
+      offset-y
+      max-width="290px"
+      min-width="290px"
+    >
+      <template v-slot:activator="{ on }">
+        <v-text-field
+          v-model="dateFormatted"
+          v-bind="$attrs"
+          v-on="on"
+        ></v-text-field>
+        <!-- @blur="date = parseDate(dateFormatted)" -->
+      </template>
+      <v-date-picker
+        v-model="date"
+        no-title
+        locale="pt-br"
+        v-bind="$attrs.picker || null"
+        @input="menu = false"
+      ></v-date-picker>
+    </v-menu>
+  </div>
 </template>
 <script>
 export default {

@@ -24,7 +24,7 @@ export const mutations = {
 
 export const actions = {
   fetchConfig({ commit, rootState }) {
-    const { clientId } = rootState.auth.currentUser
+    const clientId = rootState.client.currentClientId
     return axios.get(`/api/smart/client/${clientId}`).then((response) => {
       const baseConfig = response.data
       commit('SET_BASE_CONFIG', baseConfig)
@@ -35,7 +35,7 @@ export const actions = {
     commit('CLEAR_URL')
   },
   updateConfig({ commit, rootState }, config) {
-    const { clientId } = rootState.auth.currentUser
+    const clientId = rootState.client.currentClientId
     const sendConfig = { dailyEmailLimit: config.dailyEmailLimit }
     return axios
       .put(`/api/smart/client/${clientId}`, sendConfig)

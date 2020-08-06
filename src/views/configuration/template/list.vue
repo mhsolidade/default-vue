@@ -18,6 +18,7 @@
         class=""
         hide-default-footer
         :options="{ itemsPerPage: -1 }"
+        :disable-sort="$vuetify.breakpoint.xsOnly"
       >
         <template v-slot:item.actions="{ item }">
           <BaseMenuActions v-slot:links>

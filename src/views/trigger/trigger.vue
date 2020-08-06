@@ -2,24 +2,29 @@
   <div>
     <VRow align="center" class="" justify="center">
       <VCol cols="12" sm="12" md="10" class="mt-0 pt-0" justify="center">
-        <VForm ref="form" v-model="valid" :lazy-validation="lazy">
+        <VForm ref="form" v-model="valid">
           <TriggerDetails :trigger="trigger" />
           <TriggerValidity :trigger="trigger" />
+          <TriggerUtm :trigger="trigger" />
+          <TriggerFirstInteraction :trigger="trigger" />
+          <TriggerNextInteraction :trigger="trigger" />
+          <TriggerHtml
+            :templates="templates"
+            :themes="themes"
+            :trigger="trigger"
+          />
 
           <BaseCard>
             <template v-slot:title>
               <VCol cols="12" sm="12" md="12">
-                <Vrow justify="space-between">
-                  <v-btn class="" @click="validate">
+                <VRow>
+                  <v-btn class="" :to="{ name: 'trigger' }">
                     Cancelar
                   </v-btn>
-                  <v-btn class="ma-2" @click="validate">
+                  <v-btn class="ml-2" :loading="loading" @click="save">
                     salvar
                   </v-btn>
-                  <v-btn class="" @click="validate">
-                    Ativar e Confg. Repiques
-                  </v-btn>
-                </Vrow>
+                </VRow>
               </VCol>
             </template>
           </BaseCard>
@@ -29,12 +34,21 @@
   </div>
 </template>
 <script>
+import { alertMethods } from '@state/helpers'
 import triggerDetails from './trigger-details.vue'
 import triggerValidity from './trigger-validity.vue'
+import triggerUtm from './trigger-utm.vue'
+import triggerFirstInteraction from './trigger-first-interaction.vue'
+import triggerNextInteraction from './trigger-next-interaction.vue'
+import triggerHtml from './trigger-html.vue'
 export default {
   components: {
     TriggerDetails: triggerDetails,
     TriggerValidity: triggerValidity,
+    TriggerUtm: triggerUtm,
+    TriggerFirstInteraction: triggerFirstInteraction,
+    TriggerNextInteraction: triggerNextInteraction,
+    TriggerHtml: triggerHtml,
   },
 
   props: {
@@ -48,15 +62,52 @@ export default {
       default: () => {},
       required: true,
     },
+    templates: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
+    themes: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
   },
   data() {
     return {
       valid: true,
+      loading: false,
     }
   },
   methods: {
-    validate() {
-      this.$refs.form.validate()
+    ...alertMethods,
+    async save() {
+      if (!this.$refs.form.validate()) return
+      this.loading = true
+      if (this.trigger.id) {
+        await this.updatedTrigger()
+      } else {
+        await this.createTrigger()
+      }
+    },
+    createTrigger() {
+      this.$store
+        .dispatch('trigger/createTrigger', this.trigger)
+        .then((resp) => {
+          this.newAlert(`Gatilho criado com sucesso ${this.trigger.name}`)
+          // this.$router.push({ name: 'banner' })
+          this.loading = false
+        })
+    },
+    updatedTrigger() {
+      this.$store
+        .dispatch('trigger/updateTrigger', this.trigger)
+        .then((resp) => {
+          this.newAlert(`Gatilho atualizado com sucesso ${this.trigger.name}`)
+          this.loading = false
+        })
     },
   },
 }

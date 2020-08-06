@@ -10,7 +10,6 @@
           <VTextField
             v-model="trigger.name"
             :rules="rules.name"
-            counter="20"
             outlined
             required
           ></VTextField>
@@ -18,7 +17,6 @@
           <VTextField
             v-model="subject"
             :rules="rules.name"
-            counter="20"
             outlined
             required
           ></VTextField>
@@ -26,7 +24,6 @@
           <VTextField
             v-model="trigger.fromName"
             :rules="rules.name"
-            counter="20"
             outlined
             required
           ></VTextField>
@@ -37,7 +34,6 @@
             v-model="trigger.sort"
             v-mask="'####'"
             :rules="rules.name"
-            counter="20"
             outlined
             required
           ></VTextField>
@@ -56,7 +52,6 @@
           <VTextField
             v-model="trigger.fromEmail"
             :rules="rules.name"
-            counter="20"
             outlined
             required
           ></VTextField>
@@ -79,7 +74,7 @@ export default {
   data() {
     return {
       rules: {
-        name: [(v) => ''],
+        name: [(v) => !!v || 'Preencher'],
       },
       status: [
         { value: 'enabled', name: 'Ativo' },

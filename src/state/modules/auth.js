@@ -7,6 +7,15 @@ export const state = {
 
 export const mutations = {
   SET_CURRENT_USER(state, newValue) {
+    if (newValue) {
+      if ('clients' in newValue) {
+        newValue.clients = newValue.clients
+          .replace(/"/g, "'")
+          .replace(/\]/g, '')
+          .replace(/\[/g, '')
+          .split(',')
+      }
+    }
     state.currentUser = newValue
     saveState('auth.currentUser', state.currentUser)
     setDefaultAuthHeaders(state)
@@ -38,47 +47,44 @@ export const actions = {
     if (getters.loggedIn) return dispatch('validate')
     const cookie = await axios
       .post('/api/admin/Authenticate/login', {
-        email: 'mhsolidade@gmail.com',
-        password: 'S123456',
+        email: username,
+        password: password,
         remember: true,
       })
       .then((response) => {
         return response.headers.cookie
       })
-    if (cookie.includes('laravel_session')) {
-      commit('SET_TOKEN', cookie)
-      return axios
-        .post('/api/admin/System/getOptions?system=smart')
-        .then((response) => {
-          const user = response.data.user
-          user.clientId = 'sast'
-          commit('SET_CURRENT_USER', user)
-          return user
-        })
-    } else {
-      return Promise.resolve(null)
-    }
+    if (!cookie.includes('laravel_session')) return Promise.resolve(false)
+    commit('SET_TOKEN', cookie)
+
+    const user = await dispatch('fetchUser')
+    await dispatch('client/fetchClient', null, { root: true })
+    return Promise.resolve(user)
   },
 
   // Logs out the current user.
-  logOut({ commit }) {
+  logOut({ commit, dispatch }) {
     commit('SET_CURRENT_USER', null)
     commit('SET_TOKEN', null)
+    dispatch('client/clearCurrentClientId', null, { root: true })
   },
 
   // Validates the current user's token and refreshes it
   // with new data from the API.
-  validate({ commit, state }) {
-    if (!state.currentUser) return Promise.resolve(null)
-    if (!state.token) return Promise.resolve(null)
-
+  async validate({ commit, state, dispatch }) {
+    if (!state.token) return Promise.resolve(false)
+    if (!state.currentUser) return Promise.resolve(false)
+    const user = await dispatch('fetchUser')
+    return Promise.resolve(user)
+  },
+  fetchUser({ commit }) {
     return axios
       .get('/api/admin/System/getOptions?system=smart')
       .then((response) => {
         const user = response.data.user
-        user.clientId = 'sast'
+
         commit('SET_CURRENT_USER', user)
-        return user
+        return Promise.resolve(user)
       })
       .catch((error) => {
         if (error.response && error.response.status === 401) {
@@ -87,7 +93,48 @@ export const actions = {
         } else {
           console.warn(error)
         }
+        return Promise.reject(error)
+      })
+  },
+
+  updatedBaseInfo({ commit, state }, { name, email }) {
+    return axios
+      .put('/api/admin/Users/saveCurrent', { name, email })
+      .then((response) => {
+        const user = response.data.user
+        user.clientId = state.currentUser.clientId
+        commit('SET_CURRENT_USER', user)
+        return user
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 422) {
+          return Promise.reject(error.response.data)
+        } else {
+          console.warn(error)
+        }
         return null
+      })
+  },
+  changePassword(
+    { commit, state },
+    { currentPassword, password, passwordConfirmation }
+  ) {
+    return axios
+      .put('/api/admin/Users/changePass', {
+        currentPassword,
+        password,
+        passwordConfirmation,
+      })
+      .then((response) => {
+        const user = state.currentUser
+        return Promise.resolve(user)
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 422) {
+          return Promise.reject(error.response.data)
+        } else {
+          console.warn(error)
+        }
       })
   },
 }

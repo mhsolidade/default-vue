@@ -7,28 +7,42 @@
             Gatilhos Ativos
           </template>
           <template v-slot:body>
-            <v-data-table
-              :headers="headers"
-              :items="triggers"
-              :items-per-page="5"
-              class=""
-              hide-default-footer
-              :options="{ itemsPerPage: -1 }"
+            <v-skeleton-loader
+              ref="skeleton"
+              :loading="loading"
+              type="table-tbody"
+              class="mx-auto"
             >
-              <template v-slot:item.actions="{ item }">
-                <BaseMenuActions v-slot:links>
-                  <template>
-                    <VListItem
-                      :to="{ name: 'themeEdit', params: { id: item.id } }"
-                      ><VListItemTitle>editar</VListItemTitle>
-                    </VListItem>
-                    <VListItem @click="sendConfimation(item)"
-                      ><VListItemTitle>deletar</VListItemTitle>
-                    </VListItem>
-                  </template>
-                </BaseMenuActions>
-              </template>
-            </v-data-table>
+              <v-data-table
+                :headers="headers"
+                :items="triggers"
+                :items-per-page="5"
+                class=""
+                hide-default-footer
+                :options="{ itemsPerPage: -1 }"
+                :disable-sort="$vuetify.breakpoint.xsOnly"
+              >
+                <template v-slot:item.actions="{ item }">
+                  <BaseMenuActions v-slot:links>
+                    <template>
+                      <VListItem
+                        :to="{
+                          name: 'triggerEdit',
+                          params: { triggerId: item.id },
+                        }"
+                        ><VListItemTitle>editar</VListItemTitle>
+                      </VListItem>
+                      <VListItem @click="openEmailTest(item)"
+                        ><VListItemTitle>Envio de Teste</VListItemTitle>
+                      </VListItem>
+                      <VListItem @click="sendConfimation(item)"
+                        ><VListItemTitle>Desativar</VListItemTitle>
+                      </VListItem>
+                    </template>
+                  </BaseMenuActions>
+                </template>
+              </v-data-table>
+            </v-skeleton-loader>
           </template>
         </BaseCard>
       </VCol>
@@ -40,60 +54,75 @@
             Gatilhos inativos
           </template>
           <template v-slot:body>
-            <v-data-table
-              :headers="deactivatedheaders"
-              :items="deactivatedEngines"
-              :items-per-page="5"
-              class=""
-              hide-default-footer
-              :options="{ itemsPerPage: -1 }"
+            <v-skeleton-loader
+              ref="skeleton"
+              :loading="loading"
+              type="table-tbody"
+              class="mx-auto"
             >
-              <template v-slot:item.sort>
-                --
-              </template>
-              <template v-slot:item.status>
-                Inativo
-              </template>
-              <template v-slot:item.actions="{ item }">
-                <VBtn
-                  text
-                  small
-                  color="primary"
-                  :to="{
-                    name: 'triggerNew',
-                    params: {
-                      engineName: item.name,
-                      engineId: item.id,
-                    },
-                  }"
-                  >Ativar</VBtn
-                >
-              </template>
-            </v-data-table>
+              <v-data-table
+                :headers="deactivatedheaders"
+                :items="deactivatedEngines"
+                :items-per-page="5"
+                class=""
+                hide-default-footer
+                :options="{ itemsPerPage: -1 }"
+                :disable-sort="$vuetify.breakpoint.xsOnly"
+              >
+                <template v-slot:item.sort>
+                  --
+                </template>
+                <template v-slot:item.status>
+                  Inativo
+                </template>
+                <template v-slot:item.actions="{ item }">
+                  <VBtn
+                    text
+                    small
+                    color="primary"
+                    :to="{
+                      name: 'triggerNew',
+                      params: {
+                        engineName: item.name,
+                        engineId: item.id,
+                      },
+                    }"
+                    >Ativar</VBtn
+                  >
+                </template>
+              </v-data-table>
+            </v-skeleton-loader>
           </template>
         </BaseCard>
       </VCol>
     </VRow>
+    <TriggerSendEmailTest
+      v-if="!!emailTest"
+      v-model="emailTest"
+      :trigger="selectTrigger"
+    ></TriggerSendEmailTest>
   </div>
 </template>
 
 <script>
-import { confirmationMethods, alertMethods } from '@state/helpers'
+import {
+  confirmationMethods,
+  alertMethods,
+  tiggerMethods,
+} from '@state/helpers'
+import TriggerSendEmailTest from './trigger-send-email-test.vue'
+
 export default {
-  props: {
-    deactivatedEngines: {
-      type: Array,
-      default: () => [],
-      require: true,
-    },
-    triggers: {
-      type: Array,
-      default: () => [],
-      require: true,
-    },
+  components: {
+    TriggerSendEmailTest,
   },
   data() {
     return {
+      emailTest: false,
+      loading: false,
+      selectTrigger: null,
+      deactivatedEngines: [],
+      triggers: [],
       headers: [
         {
           text: 'ID',
@@ -121,13 +150,28 @@ export default {
       ],
     }
   },
+  created() {
+    this.loading = true
+    this.getDisabledEnabledTriggers()
+      .then((resp) => {
+        const { triggers, disabledEngines } = resp
+        this.deactivatedEngines = disabledEngines
+        this.triggers = triggers
+        this.loading = false
+      })
+      .catch((error) => {
+        this.loading = false
+        console.log(error)
+      })
+  },
   methods: {
+    ...tiggerMethods,
     ...confirmationMethods,
     ...alertMethods,
     sendConfimation(item) {
       this.setConfirmation({
-        title: 'Atenção! Antes de remover o Gatilho.',
-        description: `Confirma a exclusão do Gatilho ${item.name}?`,
+        title: 'Atenção! Antes de desativar o Gatilho.',
+        description: `Confirma a desativar do Gatilho ${item.name}?`,
         promise: this.delete,
         params: { item },
       })
@@ -139,6 +183,10 @@ export default {
           this.newAlert(`deletado com sucesso ${item.name}`)
         })
       })
+    },
+    openEmailTest(item) {
+      this.selectTrigger = item
+      this.emailTest = true
     },
   },
 }

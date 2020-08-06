@@ -3,8 +3,23 @@ import login from './login'
 import trigger from './trigger'
 import configuration from './configuration'
 import lazyLoadView from './helper'
+import user from './user'
 
 export default [
+  {
+    path: '/login',
+    component: () => lazyLoadView(import('@views/login/index.vue')),
+    children: [...login],
+  },
+  ...user,
+  {
+    path: '/cliente',
+    name: 'client',
+    meta: {
+      authRequired: true,
+    },
+    component: () => lazyLoadView(import('@views/middlewareClient.vue')),
+  },
   {
     path: '',
     redirect: 'dashboard',
@@ -14,6 +29,7 @@ export default [
     name: 'dashboard',
     meta: {
       authRequired: true,
+      clientIdRequired: true,
       bradcrumb: [
         {
           text: 'Dashboard',
@@ -25,20 +41,29 @@ export default [
     component: () => lazyLoadView(import('@views/dashboard/index.vue')),
   },
   {
-    path: '/gatilhos/',
-    meta: {
-      authRequired: true,
-    },
-    component: () => lazyLoadView(import('@views/trigger/index.vue')),
-    children: [...trigger],
-  },
-  {
     path: '/relatorios',
     name: 'reports',
     meta: {
       authRequired: true,
+      clientIdRequired: true,
+      bradcrumb: [
+        {
+          text: 'Relatórios',
+          disabled: true,
+          routerName: 'reports',
+        },
+      ],
     },
-    component: () => lazyLoadView(import('@views/example.vue')),
+    component: () => lazyLoadView(import('@views/report/report.vue')),
+  },
+  {
+    path: '/gatilhos',
+    meta: {
+      authRequired: true,
+      clientIdRequired: true,
+    },
+    component: () => lazyLoadView(import('@views/trigger/index.vue')),
+    children: [...trigger],
   },
   {
     path: '/configuracao',
@@ -47,11 +72,6 @@ export default [
     },
     children: [...configuration],
     component: () => lazyLoadView(import('@views/configuration/index.vue')),
-  },
-  {
-    path: '/login',
-    component: () => lazyLoadView(import('@views/login/index.vue')),
-    children: [...login],
   },
   {
     path: '/404',

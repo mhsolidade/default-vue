@@ -26,6 +26,7 @@
         class=""
         hide-default-footer
         :options="{ itemsPerPage: -1 }"
+        :disable-sort="$vuetify.breakpoint.xsOnly"
       >
         <template v-slot:item.startDate="{ item }">
           {{ item.startDate | moment('DD/MM/YYYY') }}

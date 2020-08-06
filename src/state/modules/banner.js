@@ -52,7 +52,7 @@ export const mutations = {
 
 export const actions = {
   fetchBanners({ commit, rootState }) {
-    const { clientId } = rootState.auth.currentUser
+    const clientId = rootState.client.currentClientId
     return axios
       .get(`/api/smart/banner?clientId=${clientId}`)
       .then((response) => {
@@ -73,7 +73,7 @@ export const actions = {
     })
   },
   deleteBanner({ commit, rootState }, id) {
-    const { clientId } = rootState.auth.currentUser
+    const clientId = rootState.client.currentClientId
     return axios
       .delete(`/api/smart/banner/${id}?client_id=${clientId}`)
       .then((response) => {
@@ -83,7 +83,7 @@ export const actions = {
       })
   },
   updateBanner({ commit, rootState }, bannerSend) {
-    const { clientId } = rootState.auth.currentUser
+    const clientId = rootState.client.currentClientId
     bannerSend.client_id = clientId
     return axios
       .put(
@@ -96,7 +96,7 @@ export const actions = {
       })
   },
   createBanner({ commit, rootState }, bannerSend) {
-    const { clientId } = rootState.auth.currentUser
+    const clientId = rootState.client.currentClientId
     bannerSend.client_id = clientId
     return axios
       .post(`/api/smart/banner?client_id=${clientId}`, bannerSend)

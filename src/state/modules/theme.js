@@ -50,7 +50,7 @@ export const mutations = {
 
 export const actions = {
   fetchThemes({ commit, rootState }) {
-    const { clientId } = rootState.auth.currentUser
+    const clientId = rootState.client.currentClientId
     return axios.get(`/api/sas/themes/${clientId}`).then((response) => {
       const themes = response.data[0]
       commit('SET_THEMES', themes)
@@ -61,7 +61,7 @@ export const actions = {
     commit('CLEAR_THEME')
   },
   fetchTheme({ commit, rootState }, id) {
-    const { clientId } = rootState.auth.currentUser
+    const clientId = rootState.client.currentClientId
 
     return axios.get(`/api/sas/theme/${clientId}_${id}`).then((response) => {
       const theme = response.data
@@ -70,7 +70,7 @@ export const actions = {
     })
   },
   deleteTheme({ commit, rootState }, id) {
-    const { clientId } = rootState.auth.currentUser
+    const clientId = rootState.client.currentClientId
 
     return axios.delete(`/api/sas/theme/${clientId}_${id}`).then((response) => {
       const theme = response.data
@@ -79,7 +79,7 @@ export const actions = {
     })
   },
   updateTheme({ commit, rootState }, theme) {
-    const { clientId } = rootState.auth.currentUser
+    const clientId = rootState.client.currentClientId
     theme.clientId = clientId
     return axios
       .put(`/api/sas/theme/${clientId}_${theme.id}`, theme)
@@ -91,7 +91,7 @@ export const actions = {
       })
   },
   createTheme({ rootState }, theme) {
-    const { clientId } = rootState.auth.currentUser
+    const clientId = rootState.client.currentClientId
     theme.clientId = clientId
     return axios.post(`/api/sas/theme`, theme).then((response) => {
       if (response.status === 200) {

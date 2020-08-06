@@ -7,7 +7,12 @@ export const authComputed = {
   ...mapGetters('auth', ['loggedIn']),
 }
 
-export const authMethods = mapActions('auth', ['logIn', 'logOut'])
+export const authMethods = mapActions('auth', [
+  'logIn',
+  'logOut',
+  'updatedBaseInfo',
+  'changePassword',
+])
 
 export const layoutMenuMethods = mapActions('layoutMenu', [
   'toggleActivateMenu',
@@ -67,3 +72,7 @@ export const engineComputed = {
     engines: (state) => state.engines,
   }),
 }
+
+export const tiggerMethods = mapActions('trigger', [
+  'getDisabledEnabledTriggers',
+])

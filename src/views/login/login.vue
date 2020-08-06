@@ -62,8 +62,8 @@ export default {
   components: {},
   data() {
     return {
-      username: '',
-      password: '',
+      username: 'mhsolidade@gmail.com',
+      password: 'S123456',
       authError: false,
       logError: '',
       tryingToLogIn: false,
@@ -84,11 +84,13 @@ export default {
       })
         .then((token) => {
           this.tryingToLogIn = false
+          console.log('opa')
           this.$router.push(
             this.$route.query.redirectFrom || { name: 'dashboard' }
           )
         })
         .catch((error) => {
+          console.log('error')
           this.tryingToLogIn = false
           this.authError = true
           this.logError = error

@@ -54,7 +54,7 @@ export const mutations = {
 
 export const actions = {
   fetchUrls({ commit, rootState }) {
-    const { clientId } = rootState.auth.currentUser
+    const clientId = rootState.client.currentClientId
     return axios.get(`/api/smart/Urls/listUrl/${clientId}`).then((response) => {
       console.log(response)
       const urls = response.data.urls
@@ -66,7 +66,7 @@ export const actions = {
     commit('CLEAR_URL')
   },
   fetchUrl({ commit, rootState }, id) {
-    const { clientId } = rootState.auth.currentUser
+    const clientId = rootState.client.currentClientId
     return axios.get(`/api/smart/url/${clientId}_${id}`).then((response) => {
       const url = response.data
       commit('SET_URL', url)
@@ -74,7 +74,7 @@ export const actions = {
     })
   },
   deleteUrl({ commit, rootState }, id) {
-    const { clientId } = rootState.auth.currentUser
+    const clientId = rootState.client.currentClientId
     return axios.delete(`/api/smart/url/${clientId}_${id}`).then((response) => {
       const url = response.data
       commit('REMOVE_URL_FROM_LIST', url.id)
@@ -82,7 +82,7 @@ export const actions = {
     })
   },
   updateUrl({ commit, rootState }, url) {
-    const { clientId } = rootState.auth.currentUser
+    const clientId = rootState.client.currentClientId
     url.client_id = clientId
     return axios
       .put(`/api/smart/url/${clientId}_${url.id}`, url)
@@ -94,7 +94,7 @@ export const actions = {
       })
   },
   createUrl({ rootState }, url) {
-    const { clientId } = rootState.auth.currentUser
+    const clientId = rootState.client.currentClientId
     url.client_id = clientId
     return axios.post(`/api/smart/url`, url).then((response) => {
       if (response.status === 200) {

@@ -11,9 +11,6 @@
       </VToolbarTitle>
     </VRow>
     <template v-if="loggedIn">
-      <VSpacer></VSpacer>
-      <VIcon class="mr-1" large>mdi-account-circle</VIcon>
-      {{ currentUser.name }}
       <NavBarMenuUser />
     </template>
   </VAppBar>

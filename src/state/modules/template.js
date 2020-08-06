@@ -50,7 +50,7 @@ export const mutations = {
 
 export const actions = {
   fetchTemplates({ commit, rootState }) {
-    const { clientId } = rootState.auth.currentUser
+    const clientId = rootState.client.currentClientId
     return axios.get(`/api/sas/templates/${clientId}`).then((response) => {
       const templates = response.data[0]
       commit('SET_TEMPLATES', templates)
@@ -61,7 +61,7 @@ export const actions = {
     commit('CLEAR_TEMPLATE')
   },
   fetchTemplate({ commit, rootState }, id) {
-    const { clientId } = rootState.auth.currentUser
+    const clientId = rootState.client.currentClientId
     return axios.get(`/api/sas/template/${clientId}_${id}`).then((response) => {
       const template = response.data
       commit('SET_TEMPLATE', template)
@@ -69,7 +69,7 @@ export const actions = {
     })
   },
   deleteTemplate({ commit, rootState }, id) {
-    const { clientId } = rootState.auth.currentUser
+    const clientId = rootState.client.currentClientId
 
     return axios
       .delete(`/api/sas/template/${clientId}_${id}`)
@@ -80,7 +80,7 @@ export const actions = {
       })
   },
   updateTemplate({ commit, rootState }, template) {
-    const { clientId } = rootState.auth.currentUser
+    const clientId = rootState.client.currentClientId
     template.client_id = clientId
     return axios
       .put(`/api/sas/template/${clientId}_${template.id}`, template)
@@ -93,7 +93,7 @@ export const actions = {
       })
   },
   createTemplate({ rootState }, template) {
-    const { clientId } = rootState.auth.currentUser
+    const clientId = rootState.client.currentClientId
     template.client_id = clientId
     return axios.post(`/api/sas/template/`, template).then((response) => {
       if (response.status === 200) {

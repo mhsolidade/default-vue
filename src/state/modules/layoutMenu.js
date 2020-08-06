@@ -12,7 +12,7 @@ export const state = {
     },
     {
       name: 'Gatilhos',
-      icon: 'mdi-card-outline',
+      icon: 'mdi-email-send',
       color: '',
       isActive: false,
       router: { name: 'trigger' },
@@ -20,7 +20,7 @@ export const state = {
     },
     {
       name: 'Relatórios',
-      icon: 'mdi-card-outline',
+      icon: 'mdi-chart-timeline-variant',
       color: '',
       isActive: false,
       router: { name: 'reports' },

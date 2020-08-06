@@ -1,10 +1,10 @@
 <template>
   <BaseCard>
     <template v-slot:title>
-      Primeira interação
+      Próxima interação
       <p class="grey--text ">
-        Se refere ao primeiro envio, por exemplo, enviar o primeiro e-mail 1
-        horas após a navegação.
+        Se refere ao segundo envio, por exemplo, enviar o segundo e-mail 12
+        horas após o primeiro e-mail.
       </p>
     </template>
     <template v-slot:body>
@@ -57,25 +57,20 @@ export default {
       ],
     }
   },
+
   created() {
-    if (
-      Array.isArray(this.trigger.config.firstInteraction) &&
-      this.trigger.config.firstInteraction.length > 0
-    ) {
+    if (this.trigger.config.nextInteraction) {
       const [
         tempValue,
         tempType,
-      ] = this.trigger.config.firstInteraction[0].split(' ')
+      ] = this.trigger.config.nextInteraction[0].split(' ')
       this.value = tempValue
       this.type = tempType
     }
   },
   methods: {
     setFirstInteraction() {
-      this.trigger.config.firstInteraction = []
-      for (let index = 0; index < 7; index++) {
-        this.trigger.config.firstInteraction.push(`${this.value} ${this.type}`)
-      }
+      this.trigger.config.nextInteraction = `${this.value} ${this.type}`
     },
   },
 }

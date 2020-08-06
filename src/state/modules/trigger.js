@@ -26,6 +26,7 @@ export const state = {
       },
       subjectArray: [{ type: '', subject: '' }],
       interestChannelDelete: [],
+      tracking: { teste: 'boa time' },
     },
     tpl: '',
     tplTest: '',
@@ -49,6 +50,9 @@ export const state = {
     },
   ],
   disabledEngines: [],
+  triggerTestMessage: '',
+  triggerTest: [],
+  triggerTestHtml: [],
 }
 
 export const getters = {
@@ -86,6 +90,7 @@ export const mutations = {
         },
         subjectArray: [{ type: '', subject: '' }],
         interestChannelDelete: [],
+        tracking: { teste: 'boa time' },
       },
       tpl: '',
       tplTest: '',
@@ -104,34 +109,30 @@ export const mutations = {
     state.urls.splice(index, 1)
   },
   UPDATE_TRIGGER_IN_LIST(state, trigger) {
-    const index = state.urls.findIndex((item) => item.id === trigger.id)
+    const index = state.triggers.findIndex((item) => item.id === trigger.id)
     if (index !== -1) {
-      state.urls[index] = trigger
+      state.triggers[index] = trigger
     }
   },
   SET_DISABLED_ENGINES(state, disabledEngines) {
     state.disabledEngines = disabledEngines
   },
+  SET_TEST_MESSAGE(state, newValue) {
+    state.triggerTestMessage = newValue
+  },
+  SET_TEST(state, newValue) {
+    state.triggerTest = newValue
+  },
 }
 
 export const actions = {
   fetchTriggers({ commit, rootState }) {
-    const { clientId } = rootState.auth.currentUser
+    const clientId = rootState.client.currentClientId
     return axios
       .get(`/api/smart/Channels/listChannel/${clientId}`)
       .then((response) => {
-        const triggersWithRepique = []
         const triggers = response.data.channels
-        triggers.forEach((trigger) => {
-          if (trigger.id == 10) trigger.parentChannelId = 1
-        })
-        triggers.forEach((trigger) => {
-          trigger.repique = triggers.filter(
-            (item) => item.parentChannelId == trigger.id
-          )
-          if (trigger.parentChannelId != 0 || !trigger.parentChannelId)
-            triggersWithRepique.push(trigger)
-        })
+
         commit('SET_TRIGGERS', triggers)
         return Promise.resolve(triggers)
       })
@@ -140,9 +141,9 @@ export const actions = {
     commit('CLEAR_TRIGGER')
   },
   fetchTrigger({ commit, rootState }, id) {
-    const { clientId } = rootState.auth.currentUser
+    const clientId = rootState.client.currentClientId
     return axios
-      .get(`/api/smart/trigger/${clientId}_${id}`)
+      .get(`/api/smart/channel/${clientId}_${id}`)
       .then((response) => {
         const trigger = response.data
         commit('SET_TRIGGER', trigger)
@@ -150,9 +151,9 @@ export const actions = {
       })
   },
   deleteTrigger({ commit, rootState }, id) {
-    const { clientId } = rootState.auth.currentUser
+    const clientId = rootState.client.currentClientId
     return axios
-      .delete(`/api/smart/trigger/${clientId}_${id}`)
+      .delete(`/api/smart/channel/${clientId}_${id}`)
       .then((response) => {
         const trigger = response.data
         commit('REMOVE_TRIGGER_FROM_LIST', trigger.id)
@@ -160,21 +161,19 @@ export const actions = {
       })
   },
   updateTrigger({ commit, rootState }, trigger) {
-    const { clientId } = rootState.auth.currentUser
+    const clientId = rootState.client.currentClientId
     trigger.client_id = clientId
     return axios
-      .put(`/api/smart/trigger/${clientId}_${trigger.id}`, trigger)
+      .put(`/api/smart/channel/${clientId}_${trigger.id}`, trigger)
       .then((response) => {
-        if (response.status === 200) {
-          commit('UPDATE_TRIGGER_IN_LIST', trigger)
-          return Promise.resolve(trigger)
-        }
+        commit('UPDATE_TRIGGER_IN_LIST', trigger)
+        return Promise.resolve(trigger)
       })
   },
   createTrigger({ rootState }, trigger) {
-    const { clientId } = rootState.auth.currentUser
+    const clientId = rootState.client.currentClientId
     trigger.client_id = clientId
-    return axios.post(`/api/smart/trigger`, trigger).then((response) => {
+    return axios.post(`/api/smart/channel/`, trigger).then((response) => {
       if (response.status === 200) {
         return Promise.resolve(trigger)
       }
@@ -192,5 +191,82 @@ export const actions = {
     commit('SET_DISABLED_ENGINES', disabledEngines)
 
     return Promise.resolve({ triggers, disabledEngines })
+  },
+
+  fetchTriggerTest({ commit, rootState }, id) {
+    const clientId = rootState.client.currentClientId
+    return axios
+      .get(`/api/smart/Channels/listEmailTests/${clientId}_${id}`)
+      .then((response) => {
+        const trigger = response.data
+        commit('SET_TEST', trigger)
+        return Promise.resolve(trigger)
+      })
+  },
+  triggerGenerateEmailTest({ commit, rootState }, id) {
+    const clientId = rootState.client.currentClientId
+    return axios
+      .get(`/api/smart/Channels/generateEmailTests/${clientId}_${id}`)
+      .then((response) => {
+        const message = response.data.message
+        commit('SET_TEST_MESSAGE', message)
+        return Promise.resolve(message)
+      })
+  },
+  fetchTest({ commit, rootState }, id) {
+    const clientId = rootState.client.currentClientId
+    return axios.get(`/api/smart/email/${clientId}_${id}`).then((response) => {
+      const trigger = response.data
+      commit('SET_TEST', trigger)
+      return Promise.resolve(trigger)
+    })
+  },
+  sendEmailTest({ commit, rootState }, { id, emailAddress }) {
+    const data = {
+      clientId: rootState.client.currentClientId,
+      emailId: id,
+      emailAddress: emailAddress,
+    }
+    const instance = axios.create({})
+    return instance
+      .post(`/api/smart/Emails/sendTest`, data)
+      .then((response) => {
+        const trigger = response.data
+        commit('SET_TEST', trigger)
+        return Promise.resolve(trigger)
+      })
+  },
+  async generateHtmlTest({ commit, dispatch }, triggerId) {
+    try {
+      const triggerTestMessage = await dispatch(
+        'triggerGenerateEmailTest',
+        triggerId
+      )
+      const triggerTest = await dispatch('fetchTriggerTest', triggerId)
+      if (!!triggerTestMessage && !!triggerTest[0]) {
+        return await dispatch('fetchTest', triggerTest[0].id)
+      }
+    } catch (error) {
+      console.log(error)
+      return null
+    }
+  },
+  async sendTestToEmails({ commit, dispatch }, { triggerId, listEmails }) {
+    try {
+      const triggerTestMessage = await dispatch(
+        'triggerGenerateEmailTest',
+        triggerId
+      )
+      const triggerTest = await dispatch('fetchTriggerTest', triggerId)
+      if (!!triggerTestMessage && !!triggerTest[0]) {
+        return await dispatch('sendEmailTest', {
+          id: triggerTest[0].id,
+          emailAddress: listEmails,
+        })
+      }
+    } catch (error) {
+      console.log(error)
+      return null
+    }
   },
 }

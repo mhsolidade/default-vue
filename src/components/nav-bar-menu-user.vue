@@ -1,16 +1,18 @@
 <template>
-  <VMenu :nudge-width="150" offset-y>
+  <VMenu offset-y>
     <template v-slot:activator="{ on }">
-      <VBtn icon v-on="on">
+      <VBtn text v-on="on">
+        <VIcon class="mr-1">mdi-account-circle</VIcon>
+        {{ currentUser.name }}
         <VIcon large>mdi-menu-down</VIcon>
       </VBtn>
     </template>
 
     <VList>
-      <VListItem>
+      <VListItem exact :to="{ name: 'profile' }">
         <VListItemTitle>Perfil</VListItemTitle>
       </VListItem>
-      <VListItem>
+      <VListItem exact :to="{ name: 'logout' }">
         <VListItemTitle>sair</VListItemTitle>
       </VListItem>
     </VList>
