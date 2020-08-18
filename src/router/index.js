@@ -1,8 +1,8 @@
 import store from '@state/store'
 import routes from './routes'
+import NProgress from 'nprogress/nprogress'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import NProgress from 'nprogress/nprogress'
 
 Vue.use(VueRouter)
 
