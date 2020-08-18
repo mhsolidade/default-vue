@@ -36,7 +36,7 @@
         </VCardText>
         <VCardActions>
           <VSpacer />
-          <VBtn outlined @click="sendTest">Enviar</VBtn>
+          <VBtn outlined :loading="loading" @click="sendTest">Enviar</VBtn>
         </VCardActions>
       </VCard>
     </VDialog>
@@ -62,6 +62,7 @@ export default {
   data() {
     return {
       emails: '',
+      loading: false,
     }
   },
   computed: {
@@ -76,10 +77,13 @@ export default {
   },
   methods: {
     async sendTest() {
+      this.loading = true
       await this.$store.dispatch('trigger/sendTestToEmails', {
         triggerId: this.trigger.id,
         listEmails: this.emails,
       })
+      this.loading = false
+      this.localValue = false
     },
   },
 }

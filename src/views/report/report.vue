@@ -6,54 +6,46 @@
       </template>
       <template v-slot:body>
         <VRow justify="space-between">
-          <VCol cols="12" sm="12" md="4">
-            <samp>Período</samp>
-            <VRow class="pa-0 ml-1">
-              <BaseDatePicker
-                v-model="dateRange"
-                :piker="{}"
-                class=" mr-3"
-                label="Inicio"
-              ></BaseDatePicker>
-              <BaseDatePicker
-                v-model="dateRange"
-                label="Fim"
-                :piker="{}"
-              ></BaseDatePicker>
-            </VRow>
+          <VCol>
+            <BaseDatePickerRanger
+              v-model="dateRange"
+              :piker="{}"
+              label="Período"
+              outlined
+            ></BaseDatePickerRanger>
           </VCol>
-          <VCol cols="12" sm="2" md="2">
-            <samp>Agrupar</samp>
-
+          <VCol>
             <v-select
               v-model="status"
-              :items="status"
+              :items="items"
               item-text="name"
               item-value="value"
+              label="Agrupar"
               outlined
             ></v-select>
           </VCol>
-          <VCol cols="12" sm="2" md="2">
-            <samp>Exibir</samp>
+          <VCol>
             <v-select
               v-model="status"
-              :items="status"
+              :items="items"
               item-text="name"
               item-value="value"
+              label="Exibir"
               outlined
             ></v-select>
           </VCol>
-          <VCol cols="12" sm="2" md="2">
+          <!-- <VCol >
             <samp>Regra</samp>
             <v-select
               v-model="status"
               :items="status"
               item-text="name"
               item-value="value"
+              label="Regra"
               outlined
             ></v-select>
-          </VCol>
-          <VCol align-self="center" class="pb-4">
+          </VCol> -->
+          <VCol>
             <VBtn x-large outlined>Filtrar</VBtn>
           </VCol>
         </VRow>
@@ -121,7 +113,7 @@ export default {
           sortable: false,
           value: 'date',
         },
-        { text: 'Regra', value: 'name' },
+        // { text: 'Regra', value: 'name' },
         { text: 'Nome', value: 'name' },
         { text: 'Envio', value: '' },
         { text: 'Abertura', value: 'status' },
@@ -129,7 +121,12 @@ export default {
       ],
       loading: true,
       items: [],
-      dateRange: '',
+      dateRange: [
+        this.$moment()
+          .subtract(30, 'days')
+          .format('Y-MM-DD'),
+        this.$moment().format('Y-MM-DD'),
+      ],
     }
   },
   mounted() {

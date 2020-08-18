@@ -11,6 +11,7 @@ import _ from 'lodash'
 import '@components/_globals'
 
 Vue.config.productionTip = process.env.NODE_ENV === 'production'
+// Vue.http.options.root = process.env.VUE_APP_API_URL
 Vue.prototype.$_ = _
 
 new Vue({

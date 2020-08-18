@@ -11,15 +11,21 @@
               <VCol cols="6">
                 <BaseCardDash :loading="loadingMonth">
                   <template v-slot:subtitle-1>ÚLTIMOS 30 DIAS</template>
-                  <template v-slot:title>1 Mi</template>
-                  <template v-slot:subtitle-2>Total: 1.747,480</template>
+                  <template v-slot:title>
+                    {{ totalEmailLastThirtyDays }}
+                  </template>
+                  <template v-slot:subtitle-2
+                    >Total: {{ totalEmailLastThirtyDays }}</template
+                  >
                 </BaseCardDash>
               </VCol>
               <VCol cols="6">
                 <BaseCardDash :loading="loadingToday">
                   <template v-slot:subtitle-1>Hoje</template>
-                  <template v-slot:title>46 Mi</template>
-                  <template v-slot:subtitle-2>Total: 1.747,480</template>
+                  <template v-slot:title>{{ totalEmailToday }} Mi</template>
+                  <template v-slot:subtitle-2
+                    >Total:{{ totalEmailToday }}</template
+                  >
                 </BaseCardDash>
               </VCol>
             </VRow>
@@ -36,13 +42,22 @@
           <template v-slot:body>
             <v-data-table
               :headers="headers"
-              :items="items"
+              :items="totalTriggers"
               :items-per-page="5"
               class=""
               hide-default-footer
               :options="{ itemsPerPage: -1 }"
               :disable-sort="$vuetify.breakpoint.xsOnly"
             >
+              <template v-slot:item.day="{ item }">
+                {{ item.day | moment('DD/MM') }}
+              </template>
+              <template v-slot:item.open="{ item }">
+                {{ item.open }} ({{ percentage(item.email, item.open) }}%)
+              </template>
+              <template v-slot:item.click="{ item }">
+                {{ item.click }} ({{ percentage(item.open, item.click) }}%)
+              </template>
             </v-data-table>
           </template>
         </BaseCard>
@@ -64,24 +79,42 @@ export default {
         {
           text: 'data',
           sortable: false,
-          value: 'date',
+          value: 'day',
         },
-        { text: 'Regra', value: 'name' },
-        { text: 'Nome', value: 'name' },
-        { text: 'Envio', value: '' },
-        { text: 'Abertura', value: 'status' },
-        { text: 'Clique', value: 'actions' },
+        { text: 'Nome', value: 'channelName' },
+        { text: 'Envio', value: 'email' },
+        { text: 'Abertura', value: 'open' },
+        { text: 'Clique', value: 'click' },
       ],
       loadingToday: true,
       loadingMonth: true,
       items: [],
+      totalEmailLastThirtyDays: null,
+      totalEmailToday: null,
+      totalTriggers: [],
     }
   },
   mounted() {
-    setTimeout(() => {
-      this.loadingToday = false
+    this.$store.dispatch('report/totalEmailLastThirtyDays').then((resp) => {
+      this.totalEmailLastThirtyDays = resp
       this.loadingMonth = false
-    }, 8000)
+    })
+    this.$store.dispatch('report/totalEmailToday').then((resp) => {
+      this.totalEmailToday = resp
+      this.loadingToday = false
+    })
+    this.$store.dispatch('report/totalTriggersToday').then((resp) => {
+      this.totalTriggers = resp
+      this.loadingToday = false
+    })
+  },
+  methods: {
+    percentage(total, value) {
+      if (total > 0 && value > 0) {
+        return total / value
+      }
+      return 0
+    },
   },
 }
 </script>

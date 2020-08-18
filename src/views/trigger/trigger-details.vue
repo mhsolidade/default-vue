@@ -85,11 +85,26 @@ export default {
   computed: {
     subject: {
       get() {
-        return this.trigger.config.subjectArray[0].subject || ''
+        const subjectStatic = this.trigger.config.subjectArray.find((item) => {
+          return item.type === 'static'
+        })
+        if (subjectStatic) return subjectStatic.subject
+        return null
       },
       set(newValue) {
-        this.trigger.config.subjectArray[0].subject = newValue
-        this.trigger.config.subjectArray[0].type = 'static'
+        const subjecIndex = this.trigger.config.subjectArray.findIndex(
+          (item) => {
+            return item.type === 'static'
+          }
+        )
+        if (subjecIndex !== -1) {
+          this.trigger.config.subjectArray[subjecIndex].subject = newValue
+        } else {
+          this.trigger.config.subjectArray.push({
+            subject: newValue,
+            type: 'static',
+          })
+        }
       },
     },
   },
