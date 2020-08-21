@@ -1,7 +1,7 @@
 import axios from '@plugins/axios'
 import moment from 'moment'
-// const URL = `/api/smart/Channels/listEngine`;
-const URL = 'http://localhost:8000/api/report'
+const URL = `/api/sas/report`
+// const URL = 'http://localhost:8000/api/report'
 
 export const state = {
   total: {

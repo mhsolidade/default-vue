@@ -63,11 +63,13 @@
         </BaseCard>
       </VCol>
     </VRow>
+    <VBtn @click="test" color="success">text</VBtn>
   </Layout>
 </template>
 
 <script>
 import Layout from '@layouts/main.vue'
+import axios from '@plugins/axios'
 
 export default {
   components: {
@@ -114,6 +116,9 @@ export default {
         return total / value
       }
       return 0
+    },
+    test() {
+      axios.post('http://localhost/test', { test: 'aa' })
     },
   },
 }
