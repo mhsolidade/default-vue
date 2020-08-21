@@ -52,6 +52,7 @@ export const actions = {
         remember: true,
       })
       .then((response) => {
+        console.log({ cookieresponse: response.headers })
         return response.headers.cookie
       })
     if (!cookie.includes('laravel_session')) return Promise.resolve(false)

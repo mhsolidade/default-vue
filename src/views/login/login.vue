@@ -90,7 +90,7 @@ export default {
           )
         })
         .catch((error) => {
-          console.log('error')
+          console.log('error', error)
           this.tryingToLogIn = false
           this.authError = true
           this.logError = error
