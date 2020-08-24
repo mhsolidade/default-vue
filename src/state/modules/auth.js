@@ -46,17 +46,18 @@ export const actions = {
   async logIn({ commit, dispatch, getters }, { username, password } = {}) {
     if (getters.loggedIn) return dispatch('validate')
     const cookie = await axios
-      .post('/api/admin/Authenticate/login', {
-        email: username,
-        password: password,
-        remember: true,
-      })
+      .post(
+        '/api/admin/Authenticate/login',
+        {
+          email: username,
+          password: password,
+          remember: true,
+        },
+        { withCredentials: true }
+      )
       .then((response) => {
-        console.log({ cookieresponse: response.headers })
-        console.log({ 'set-cookie': response.headers['set-cookie'] })
-        return response.headers.cookie
+        return response.data.success
       })
-    console.log({ cookie: cookie })
     if (!cookie.includes('laravel_session')) return Promise.resolve(false)
     commit('SET_TOKEN', cookie)
 

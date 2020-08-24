@@ -11,6 +11,7 @@ if (process.env.VUE_APP_BUILD_TARGET === 'production')
   axios.defaults.baseURL = process.env.VUE_APP_API_URL
 
 // axios.defaults.headers.common['Upgrade-Insecure-Requests'] = 1
+axios.defaults.withCredentials = true
 axios.interceptors.response.use(
   function(response) {
     // Do something with response data

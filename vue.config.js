@@ -41,16 +41,16 @@ module.exports = {
               cookieDomainRewrite: {
                 '*': 'localhost',
               },
-              onProxyRes: (proxyRes, req, res) => {
-                const sc = proxyRes.headers['set-cookie']
-                if (Array.isArray(sc)) {
-                  const cookie = sc.map((sc) => {
-                    return sc.split(';')
-                  })
-                  res.append('cookie', cookie)
-                  // console.log(cookie)
-                }
-              },
+              // onProxyRes: (proxyRes, req, res) => {
+              //   const sc = proxyRes.headers['set-cookie']
+              //   if (Array.isArray(sc)) {
+              //     const cookie = sc.map((sc) => {
+              //       return sc.split(';')
+              //     })
+              //     res.append('cookie', cookie)
+              //     // console.log(cookie)
+              //   }
+              // },
               pathRewrite: function(path, req) {
                 return path.replace('/api', '/api')
               },

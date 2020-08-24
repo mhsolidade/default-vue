@@ -82,12 +82,14 @@ export default {
         username: this.username,
         password: this.password,
       })
-        .then((token) => {
-          this.tryingToLogIn = false
-          console.log('opa')
-          this.$router.push(
-            this.$route.query.redirectFrom || { name: 'dashboard' }
-          )
+        .then((success) => {
+          if (success) {
+            this.tryingToLogIn = false
+            console.log('opa')
+            this.$router.push(
+              this.$route.query.redirectFrom || { name: 'dashboard' }
+            )
+          }
         })
         .catch((error) => {
           console.log('error', error)
