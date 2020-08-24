@@ -55,7 +55,7 @@ export const actions = {
         return response.data.success
       })
     if (!success) return Promise.resolve(false)
-    commit('SET_TOKEN', cookie)
+    commit('SET_TOKEN', success)
 
     const user = await dispatch('fetchUser')
     await dispatch('client/fetchClient', null, { root: true })
