@@ -46,15 +46,11 @@ export const actions = {
   async logIn({ commit, dispatch, getters }, { username, password } = {}) {
     if (getters.loggedIn) return dispatch('validate')
     const cookie = await axios
-      .post(
-        '/api/admin/Authenticate/login',
-        {
-          email: username,
-          password: password,
-          remember: true,
-        },
-        { withCredentials: true }
-      )
+      .post('/api/admin/Authenticate/login', {
+        email: username,
+        password: password,
+        remember: true,
+      })
       .then((response) => {
         return response.data.success
       })
