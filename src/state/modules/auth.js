@@ -45,7 +45,7 @@ export const actions = {
   // Logs in the current user.
   async logIn({ commit, dispatch, getters }, { username, password } = {}) {
     if (getters.loggedIn) return dispatch('validate')
-    const cookie = await axios
+    const success = await axios
       .post('/api/admin/Authenticate/login', {
         email: username,
         password: password,
@@ -54,7 +54,7 @@ export const actions = {
       .then((response) => {
         return response.data.success
       })
-    if (!cookie.includes('laravel_session')) return Promise.resolve(false)
+    if (!success) return Promise.resolve(false)
     commit('SET_TOKEN', cookie)
 
     const user = await dispatch('fetchUser')
