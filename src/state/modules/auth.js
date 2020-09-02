@@ -45,17 +45,17 @@ export const actions = {
   // Logs in the current user.
   async logIn({ commit, dispatch, getters }, { username, password } = {}) {
     if (getters.loggedIn) return dispatch('validate')
-    const success = await axios
-      .post('/api/admin/Authenticate/login', {
+    const laravelSession = await axios
+      .post('/api/admin/Authenticate/loginApi', {
         email: username,
         password: password,
         remember: true,
       })
       .then((response) => {
-        return response.data.success
+        return response.data.laravelSession
       })
-    if (!success) return Promise.resolve(false)
-    commit('SET_TOKEN', success)
+    if (!laravelSession) return Promise.resolve(false)
+    commit('SET_TOKEN', laravelSession)
 
     const user = await dispatch('fetchUser')
     await dispatch('client/fetchClient', null, { root: true })
@@ -153,6 +153,6 @@ function saveState(key, state) {
 
 function setDefaultAuthHeaders(state) {
   axios.defaults.headers.common.Authorization = state.token
-    ? `Cookie ${state.token}`
+    ? `Cookie laravel_session=${state.token}`
     : ''
 }
