@@ -79,7 +79,13 @@ export const actions = {
   },
   fetchUser({ commit }) {
     return axios
-      .get('/api/admin/System/getOptions?system=smart')
+      .get('/api/admin/System/getOptions?system=smart', {
+        headers: {
+          Authorization: 'Bearer 8923890130813088103',
+          Cookie: document.cookie,
+        },
+        credentials: 'same-origin',
+      })
       .then((response) => {
         const user = response.data.user
 
@@ -152,7 +158,8 @@ function saveState(key, state) {
 }
 
 function setDefaultAuthHeaders(state) {
-  axios.defaults.headers.common.Cookie = state.token
-    ? `laravel_session=${state.token}`
-    : ''
+  document.cookie = `laravel_session=${state.token}`
+  // axios.defaults.headers.common.Cookie = state.token
+  //   ? `laravel_session=${state.token}`
+  //   : ''
 }

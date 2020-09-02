@@ -29,7 +29,7 @@ module.exports = {
   // Configure Webpack's dev server.
   // https://cli.vuejs.org/guide/cli-service.html
   devServer: {
-    ...(process.env.VUE_APP_BUILD_TARGET === 'production'
+    ...(process.env.VUE_APP_BUILD_TARGET !== 'production'
       ? // Proxy API endpoints to the production base URL.
         {}
       : // Proxy API endpoints a local mock API.
