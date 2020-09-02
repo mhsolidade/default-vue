@@ -152,7 +152,7 @@ function saveState(key, state) {
 }
 
 function setDefaultAuthHeaders(state) {
-  axios.defaults.headers.common.Authorization = state.token
-    ? `Cookie laravel_session=${state.token}`
+  axios.defaults.headers.common.Cookie = state.token
+    ? `laravel_session=${state.token}`
     : ''
 }
