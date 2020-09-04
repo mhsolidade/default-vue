@@ -79,13 +79,7 @@ export const actions = {
   },
   fetchUser({ commit }) {
     return axios
-      .get('/api/admin/System/getOptions?system=smart', {
-        headers: {
-          Authorization: 'Bearer 8923890130813088103',
-          Cookie: document.cookie,
-        },
-        credentials: 'same-origin',
-      })
+      .get('/api/admin/System/getOptions?system=smart')
       .then((response) => {
         const user = response.data.user
 
@@ -158,7 +152,7 @@ function saveState(key, state) {
 }
 
 function setDefaultAuthHeaders(state) {
-  document.cookie = `laravel_session=${state.token}`
+  document.cookie = `laravel_session=${state.token};domain=painel.smartbmc.com.br`
   // axios.defaults.headers.common.Cookie = state.token
   //   ? `laravel_session=${state.token}`
   //   : ''
