@@ -46,8 +46,8 @@ export const actions = {
   async logIn({ commit, dispatch, getters }, { username, password } = {}) {
     if (getters.loggedIn) return dispatch('validate')
     const laravelSession = await axios
-      // .post('/api/admin/Authenticate/loginApi', {
-      .post('http://localhost/auth-api/login', {
+      .post('/api/admin/Authenticate/loginApi', {
+        // .post('http://localhost/auth-api/login', {
         email: username,
         password: password,
         remember: true,
@@ -81,8 +81,8 @@ export const actions = {
   fetchUser({ commit }) {
     return (
       axios
-        // .get('/api/admin/System/getOptions?system=smart')
-        .get('http://localhost/admin/profile')
+        .get('/api/admin/System/getOptions?system=smart')
+        // .get('http://localhost/admin/profile')
         .then((response) => {
           const user = response.data.user
 

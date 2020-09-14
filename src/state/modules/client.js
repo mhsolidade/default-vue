@@ -29,8 +29,8 @@ export const actions = {
     // })
     return (
       axios
-        // .get(`/api/admin/System/getOptions?system=smart`)
-        .get('http://localhost/admin/profile')
+        .get(`/api/admin/System/getOptions?system=smart`)
+        // .get('http://localhost/admin/profile')
         .then((response) => {
           const clients = response.data.user.clients
             .replace(/"/g, "'")
