@@ -10,6 +10,7 @@ console.log(
 // if (process.env.VUE_APP_BUILD_TARGET === 'production')
 axios.defaults.baseURL = process.env.VUE_APP_API_URL
 axios.defaults.withCredentials = true
+axios.defaults.crossDomain = true
 
 // axios.defaults.headers.common['Upgrade-Insecure-Requests'] = 1
 

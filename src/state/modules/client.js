@@ -27,20 +27,23 @@ export const actions = {
     //   // if (clients.length === 1) commit('SET_CLIENT_ID', clients[0].id)
     //   return Promise.resolve(clients)
     // })
-    return axios
-      .get(`/api/admin/System/getOptions?system=smart`)
-      .then((response) => {
-        const clients = response.data.user.clients
-          .replace(/"/g, "'")
-          .replace(/\]/g, '')
-          .replace(/\[/g, '')
-          .replace(/'/g, '')
-          .split(',')
-        clients.push('smp')
-        commit('SET_CLIENTS', clients)
-        if (clients.length === 1) commit('SET_CLIENT_ID', clients[0])
-        return Promise.resolve(clients)
-      })
+    return (
+      axios
+        // .get(`/api/admin/System/getOptions?system=smart`)
+        .get('http://localhost/admin/profile')
+        .then((response) => {
+          const clients = response.data.user.clients
+            .replace(/"/g, "'")
+            .replace(/\]/g, '')
+            .replace(/\[/g, '')
+            .replace(/'/g, '')
+            .split(',')
+          clients.push('smp')
+          commit('SET_CLIENTS', clients)
+          if (clients.length === 1) commit('SET_CLIENT_ID', clients[0])
+          return Promise.resolve(clients)
+        })
+    )
   },
   clearCurrentClientId({ commit }) {
     commit('SET_CLIENT_ID', null)

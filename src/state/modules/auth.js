@@ -46,7 +46,8 @@ export const actions = {
   async logIn({ commit, dispatch, getters }, { username, password } = {}) {
     if (getters.loggedIn) return dispatch('validate')
     const laravelSession = await axios
-      .post('/api/admin/Authenticate/loginApi', {
+      // .post('/api/admin/Authenticate/loginApi', {
+      .post('http://localhost/auth-api/login', {
         email: username,
         password: password,
         remember: true,
@@ -78,23 +79,26 @@ export const actions = {
     return Promise.resolve(user)
   },
   fetchUser({ commit }) {
-    return axios
-      .get('/api/admin/System/getOptions?system=smart')
-      .then((response) => {
-        const user = response.data.user
+    return (
+      axios
+        // .get('/api/admin/System/getOptions?system=smart')
+        .get('http://localhost/admin/profile')
+        .then((response) => {
+          const user = response.data.user
 
-        commit('SET_CURRENT_USER', user)
-        return Promise.resolve(user)
-      })
-      .catch((error) => {
-        if (error.response && error.response.status === 401) {
-          commit('SET_CURRENT_USER', null)
-          commit('SET_TOKEN', null)
-        } else {
-          console.warn(error)
-        }
-        return Promise.reject(error)
-      })
+          commit('SET_CURRENT_USER', user)
+          return Promise.resolve(user)
+        })
+        .catch((error) => {
+          if (error.response && error.response.status === 401) {
+            commit('SET_CURRENT_USER', null)
+            commit('SET_TOKEN', null)
+          } else {
+            console.warn(error)
+          }
+          return Promise.reject(error)
+        })
+    )
   },
 
   updatedBaseInfo({ commit, state }, { name, email }) {

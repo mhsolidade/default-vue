@@ -86,9 +86,9 @@ export default {
           if (success) {
             this.tryingToLogIn = false
             console.log('opa')
-            this.$router.push(
-              this.$route.query.redirectFrom || { name: 'dashboard' }
-            )
+            // this.$router.push(
+            //   this.$route.query.redirectFrom || { name: 'dashboard' }
+            // )
           }
         })
         .catch((error) => {
