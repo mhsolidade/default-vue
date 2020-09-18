@@ -31,29 +31,29 @@ module.exports = {
   transpileDependencies: ['vuetify'],
   // Configure Webpack's dev server.
   // https://cli.vuejs.org/guide/cli-service.html
-  devServer: {
-    proxy: {
-      '/api': {
-        target: 'http://painel.smartbmc.com.br',
-        changeOrigin: true,
-        cookieDomainRewrite: {
-          '*': 'localhost',
-        },
-        onProxyRes: (proxyRes, req, res) => {
-          const sc = proxyRes.headers['set-cookie']
-          if (Array.isArray(sc)) {
-            const cookie = sc.map((sc) => {
-              return sc.split(';')
-            })
-            res.append('cookie', cookie)
-            // console.log(cookie)
-          }
-        },
+  // devServer: {
+  //   proxy: {
+  //     '/api': {
+  //       target: 'http://painel.smartbmc.com.br',
+  //       changeOrigin: true,
+  //       cookieDomainRewrite: {
+  //         '*': 'localhost',
+  //       },
+  //       onProxyRes: (proxyRes, req, res) => {
+  //         const sc = proxyRes.headers['set-cookie']
+  //         if (Array.isArray(sc)) {
+  //           const cookie = sc.map((sc) => {
+  //             return sc.split(';')
+  //           })
+  //           res.append('cookie', cookie)
+  //           // console.log(cookie)
+  //         }
+  //       },
 
-        pathRewrite: function(path, req) {
-          return path.replace('/api', '/api')
-        },
-      },
-    },
-  },
+  //       pathRewrite: function(path, req) {
+  //         return path.replace('/api', '/api')
+  //       },
+  //     },
+  //   },
+  // },
 }

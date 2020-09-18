@@ -2,10 +2,8 @@ import camelizeKeys from '@utils/camelize-keys'
 import camelToSnake from '@utils/camel-to-snake'
 import axios from 'axios'
 
-if (process.env.VUE_APP_BUILD_TARGET === 'production')
-  axios.defaults.baseURL = process.env.VUE_APP_API_URL
-axios.defaults.withCredentials = true
-axios.defaults.crossDomain = true
+// if (process.env.VUE_APP_BUILD_TARGET === 'production')
+axios.defaults.baseURL = process.env.VUE_APP_API_URL
 
 // axios.defaults.headers.common['Upgrade-Insecure-Requests'] = 1
 
