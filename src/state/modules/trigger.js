@@ -140,15 +140,13 @@ export const actions = {
   clearTrigger({ commit }) {
     commit('CLEAR_TRIGGER')
   },
-  fetchTrigger({ commit, rootState }, id) {
+  async fetchTrigger({ commit, rootState, dispatch }, id) {
     const clientId = rootState.client.currentClientId
-    return axios
-      .get(`/api/smart/channel/${clientId}_${id}`)
-      .then((response) => {
-        const trigger = response.data
-        commit('SET_TRIGGER', trigger)
-        return Promise.resolve(trigger)
-      })
+    const triggerThemeTemplate = await dispatch('getTriggerThemeTemplate')
+    const trigger = await axios.get(`/api/smart/channel/${clientId}_${id}`)
+    console.log(trigger.data)
+    commit('SET_TRIGGER', trigger.data, triggerThemeTemplate)
+    return Promise.resolve(trigger.data)
   },
   deleteTrigger({ commit, rootState }, id) {
     const clientId = rootState.client.currentClientId
@@ -268,5 +266,36 @@ export const actions = {
       console.log(error)
       return null
     }
+  },
+
+  getTriggerThemeTemplate({ commit, rootState }) {
+    const clientId = rootState.client.currentClientId
+    return axios
+      .get(`/api/sas/channel-theme-template/${clientId}`)
+      .then((response) => {
+        const themeTemplate = response.data
+        // commit('SET_TRIGGER', trigger)
+        return Promise.resolve(themeTemplate)
+      })
+  },
+
+  createOrUpdadeTriggerThemeTemplate(
+    { commit },
+    { channelId, themeId, templateId }
+  ) {
+    const clientId = rootState.client.currentClientId
+    let data = {
+      channelId,
+      themeId,
+      templateId,
+      clientId,
+    }
+    return axios
+      .post(`/api/sas/channel-theme-template`, data)
+      .then((response) => {
+        const themeTemplate = response.data
+        // commit('SET_TRIGGER', trigger)
+        return Promise.resolve(themeTemplate)
+      })
   },
 }

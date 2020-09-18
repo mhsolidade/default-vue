@@ -9,6 +9,7 @@ import Vue from 'vue'
 import _ from 'lodash'
 // Globally register all `_base`-prefixed components
 import '@components/_globals'
+import '@utils/filters/index.js'
 
 Vue.config.productionTip = process.env.NODE_ENV === 'production'
 // Vue.http.options.root = process.env.VUE_APP_API_URL

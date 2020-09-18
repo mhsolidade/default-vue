@@ -27,6 +27,7 @@ export const actions = {
     //   // if (clients.length === 1) commit('SET_CLIENT_ID', clients[0].id)
     //   return Promise.resolve(clients)
     // })
+    console.log('aaa')
     return (
       axios
         .get(`/api/admin/System/getOptions?system=smart`)

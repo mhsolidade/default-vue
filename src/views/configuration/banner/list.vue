@@ -15,7 +15,7 @@
         </VCol>
       </VRow>
     </template>
-    <template v-slot:subtitle>
+    <template v-slot:subtitle v-if="'editBanners' in permission">
       <VBtn outlined :to="{ name: 'bannerNew' }">Criar Banner</VBtn>
     </template>
     <template v-slot:body>
@@ -39,9 +39,13 @@
             <template>
               <VListItem
                 :to="{ name: 'bannerEdit', params: { bannerId: item.id } }"
-                ><VListItemTitle>editar</VListItemTitle>
+                ><VListItemTitle>{{
+                  'editBanners' in permission ? 'editar' : 'visualizar'
+                }}</VListItemTitle>
               </VListItem>
-              <VListItem @click="sendConfimation(item)"
+              <VListItem
+                @click="sendConfimation(item)"
+                v-if="'editBanners' in permission"
                 ><VListItemTitle>deletar</VListItemTitle>
               </VListItem>
             </template>
@@ -52,7 +56,8 @@
   </BaseCard>
 </template>
 <script>
-import { confirmationMethods, alertMethods } from '@state/helpers'
+import { confirmationMethods, alertMethods, authComputed } from '@state/helpers'
+
 export default {
   props: {
     banners: {
@@ -78,6 +83,7 @@ export default {
     }
   },
   computed: {
+    ...authComputed,
     filterBanners() {
       return this.banners.filter((item) => {
         if (this.showInactive) return item.status !== 'enabled'

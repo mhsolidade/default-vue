@@ -16,20 +16,16 @@
           </VCol>
           <VCol>
             <v-select
-              v-model="status"
-              :items="items"
-              item-text="name"
-              item-value="value"
+              v-model="filter.groupBy"
+              :items="items.groupBy"
               label="Agrupar"
               outlined
             ></v-select>
           </VCol>
           <VCol>
             <v-select
-              v-model="status"
-              :items="items"
-              item-text="name"
-              item-value="value"
+              v-model="filter.display"
+              :items="items.display"
               label="Exibir"
               outlined
             ></v-select>
@@ -53,21 +49,27 @@
           <VCol cols="12" sm="4">
             <BaseCardDash :loading="loading">
               <template v-slot:subtitle-1>TOTAL DE ENVIOS</template>
-              <template v-slot:title>1 Mi</template>
+              <template v-slot:title>{{
+                1747480 | numberToFullNumber
+              }}</template>
               <template v-slot:subtitle-2>Total: 1.747,480</template>
             </BaseCardDash>
           </VCol>
           <VCol cols="12" sm="4">
             <BaseCardDash :loading="loading">
               <template v-slot:subtitle-1>TOTAL DE ABERTURAS</template>
-              <template v-slot:title>46 Mi</template>
+              <template v-slot:title>{{
+                1747480 | numberToFullNumber
+              }}</template>
               <template v-slot:subtitle-2>Total: 1.747,480</template>
             </BaseCardDash>
           </VCol>
           <VCol cols="12" sm="4">
             <BaseCardDash :loading="loading">
               <template v-slot:subtitle-1>TOTAL DE CLIQUES</template>
-              <template v-slot:title>46 Mi</template>
+              <template v-slot:title>{{
+                1747480 | numberToFullNumber
+              }}</template>
               <template v-slot:subtitle-2>Total: 1.747,480</template>
             </BaseCardDash>
           </VCol>
@@ -81,7 +83,7 @@
               <template v-slot:body>
                 <v-data-table
                   :headers="headers"
-                  :items="items"
+                  :items="list"
                   :items-per-page="5"
                   class=""
                   hide-default-footer
@@ -119,8 +121,18 @@ export default {
         { text: 'Abertura', value: 'status' },
         { text: 'Clique', value: 'actions' },
       ],
+      list: [],
       loading: true,
-      items: [],
+      items: {
+        groupBy: ['Hora', 'Data', 'Mês', 'Ano'],
+        display: ['Hora', 'Data', 'Mês', 'Ano'],
+        rules: [],
+      },
+      filter: {
+        groupBy: 'Data',
+        display: '',
+        rules: '',
+      },
       dateRange: [
         this.$moment()
           .subtract(30, 'days')

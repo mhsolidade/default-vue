@@ -100,6 +100,7 @@ export default [
             return item.id == routeTo.params.engineId
           })
           routeTo.meta.tmp.trigger.engine = routeTo.meta.tmp.engine.id
+          routeTo.meta.tmp.trigger.name = routeTo.meta.tmp.engine.name
           next()
         } catch (error) {
           console.log(error)

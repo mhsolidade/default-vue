@@ -11,6 +11,7 @@
               :rules="rules.name"
               outlined
               required
+              :disabled="!canEdit"
             ></v-text-field>
           </v-col>
           <VSpacer></VSpacer>
@@ -23,6 +24,7 @@
               item-value="value"
               outlined
               :rules="rules.name"
+              :disabled="!canEdit"
             ></v-select>
           </v-col>
           <VSpacer></VSpacer>
@@ -43,6 +45,7 @@
               outlined
               required
               :rules="rules.name"
+              :disabled="!canEdit"
             />
           </v-col>
           <v-col cols="12" md="2">
@@ -55,6 +58,7 @@
               outlined
               required
               :rules="rules.name"
+              :disabled="!canEdit"
             />
           </v-col>
           <VSpacer></VSpacer>
@@ -69,6 +73,7 @@
               row-height="20"
               outlined
               no-resize
+              :disabled="!canEdit"
             ></v-textarea>
           </VCol>
           <VSpacer></VSpacer>
@@ -79,7 +84,7 @@
               Visualizar
             </VBtn>
           </VCol>
-          <VCol cols="12" sm="2">
+          <VCol cols="12" sm="2" v-if="canEdit">
             <VBtn block outlined @click="save">Savar</VBtn>
           </VCol>
         </VRow>
@@ -89,7 +94,8 @@
   </BaseCard>
 </template>
 <script>
-import { confirmationMethods, alertMethods } from '@state/helpers'
+import { confirmationMethods, alertMethods, authComputed } from '@state/helpers'
+
 import SmartPreview from './preview.vue'
 export default {
   components: {
@@ -117,8 +123,12 @@ export default {
     }
   },
   computed: {
+    ...authComputed,
     resultTag() {
       return `{{banners.'${this.banner.name}'}}`
+    },
+    canEdit() {
+      return 'editBanners' in this.permission
     },
   },
   methods: {

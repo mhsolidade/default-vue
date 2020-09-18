@@ -3,6 +3,7 @@ import axios from '@plugins/axios'
 export const state = {
   currentUser: getSavedState('auth.currentUser'),
   token: getSavedState('auth.token'),
+  permission: getSavedState('auth.permission'),
 }
 
 export const mutations = {
@@ -24,6 +25,10 @@ export const mutations = {
     state.token = newValue
     saveState('auth.token', state.token)
     setDefaultAuthHeaders(state)
+  },
+  SET_CURRENT_PERMISSION(state, newValue) {
+    state.permission = newValue
+    saveState('auth.permission', state.permission)
   },
 }
 
@@ -67,6 +72,7 @@ export const actions = {
   logOut({ commit, dispatch }) {
     commit('SET_CURRENT_USER', null)
     commit('SET_TOKEN', null)
+    commit('SET_CURRENT_PERMISSION', null)
     dispatch('client/clearCurrentClientId', null, { root: true })
   },
 
@@ -85,14 +91,16 @@ export const actions = {
         // .get('http://localhost/admin/profile')
         .then((response) => {
           const user = response.data.user
-
+          const permission = response.data.perm
           commit('SET_CURRENT_USER', user)
+          commit('SET_CURRENT_PERMISSION', permission)
           return Promise.resolve(user)
         })
         .catch((error) => {
           if (error.response && error.response.status === 401) {
             commit('SET_CURRENT_USER', null)
             commit('SET_TOKEN', null)
+            commit('SET_CURRENT_PERMISSION', null)
           } else {
             console.warn(error)
           }
@@ -156,8 +164,7 @@ function saveState(key, state) {
 }
 
 function setDefaultAuthHeaders(state) {
-  document.cookie = `laravel_session=${state.token};domain=painel.smartbmc.com.br`
-  // axios.defaults.headers.common.Cookie = state.token
-  //   ? `laravel_session=${state.token}`
-  //   : ''
+  axios.defaults.headers.common.Authorization = state.token
+    ? `${state.token}`
+    : ''
 }

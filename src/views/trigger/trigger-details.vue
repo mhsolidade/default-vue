@@ -12,6 +12,8 @@
             :rules="rules.name"
             outlined
             required
+            readonly
+            disabled
           ></VTextField>
           <samp>Assunto do e-mail</samp>
           <VTextField

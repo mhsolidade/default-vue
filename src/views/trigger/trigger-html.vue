@@ -40,7 +40,7 @@
       <VCol v-if="type === 1" cols="12" md="6" class="mx-0 px-0">
         <p>Template</p>
         <VSelect
-          v-model="template"
+          v-model="trigger.templateId"
           no-data-text="Lista indisponível"
           hide-details
           :items="templates"
@@ -55,7 +55,7 @@
         <VSpacer></VSpacer>
         <p>Tema</p>
         <VSelect
-          v-model="theme"
+          v-model="trigger.themeId"
           no-data-text="Lista indisponível"
           hide-details
           return-object

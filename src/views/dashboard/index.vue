@@ -12,7 +12,7 @@
                 <BaseCardDash :loading="loadingMonth">
                   <template v-slot:subtitle-1>ÚLTIMOS 30 DIAS</template>
                   <template v-slot:title>
-                    {{ totalEmailLastThirtyDays }}
+                    {{ totalEmailLastThirtyDays | numberToFullNumber }}
                   </template>
                   <template v-slot:subtitle-2
                     >Total: {{ totalEmailLastThirtyDays }}</template
@@ -22,9 +22,11 @@
               <VCol cols="6">
                 <BaseCardDash :loading="loadingToday">
                   <template v-slot:subtitle-1>Hoje</template>
-                  <template v-slot:title>{{ totalEmailToday }} Mi</template>
+                  <template v-slot:title>
+                    {{ totalEmailToday | numberToFullNumber }}
+                  </template>
                   <template v-slot:subtitle-2
-                    >Total:{{ totalEmailToday }}</template
+                    >Total: {{ totalEmailToday }}</template
                   >
                 </BaseCardDash>
               </VCol>
@@ -63,7 +65,6 @@
         </BaseCard>
       </VCol>
     </VRow>
-    <VBtn @click="test" color="success">text</VBtn>
   </Layout>
 </template>
 
@@ -116,9 +117,6 @@ export default {
         return total / value
       }
       return 0
-    },
-    test() {
-      axios.post('http://localhost/test', { test: 'aa' })
     },
   },
 }
