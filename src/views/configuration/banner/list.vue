@@ -39,9 +39,9 @@
             <template>
               <VListItem
                 :to="{ name: 'bannerEdit', params: { bannerId: item.id } }"
-                ><VListItemTitle>{{
-                  'editBanners' in permission ? 'editar' : 'visualizar'
-                }}</VListItemTitle>
+                ><VListItemTitle>
+                  {{ 'editBanners' in permission ? 'editar' : 'visualizar' }}
+                </VListItemTitle>
               </VListItem>
               <VListItem
                 @click="sendConfimation(item)"

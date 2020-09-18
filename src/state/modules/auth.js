@@ -62,7 +62,7 @@ export const actions = {
       })
     if (!laravelSession) return Promise.resolve(false)
     commit('SET_TOKEN', laravelSession)
-
+    setDefaultAuthHeaders(state)
     const user = await dispatch('fetchUser')
     await dispatch('client/fetchClient', null, { root: true })
     return Promise.resolve(user)
