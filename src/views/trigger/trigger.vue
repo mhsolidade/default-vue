@@ -84,7 +84,14 @@ export default {
   methods: {
     ...alertMethods,
     async save() {
-      if (!this.$refs.form.validate()) return
+      if (!this.$refs.form.validate()) {
+        this.$vuetify.goTo(0, {
+          duration: 300,
+          offset: 0,
+          easing: 'linear',
+        })
+        return
+      }
       this.loading = true
       if (this.trigger.id) {
         await this.updatedTrigger()
@@ -92,22 +99,16 @@ export default {
         await this.createTrigger()
       }
     },
-    createTrigger() {
-      this.$store
-        .dispatch('trigger/createTrigger', this.trigger)
-        .then((resp) => {
-          this.newAlert(`Gatilho criado com sucesso ${this.trigger.name}`)
-          // this.$router.push({ name: 'banner' })
-          this.loading = false
-        })
+    async createTrigger() {
+      await this.$store.dispatch('trigger/createTrigger', this.trigger)
+
+      this.newAlert(`Gatilho criado com sucesso ${this.trigger.name}`)
+      this.loading = false
     },
-    updatedTrigger() {
-      this.$store
-        .dispatch('trigger/updateTrigger', this.trigger)
-        .then((resp) => {
-          this.newAlert(`Gatilho atualizado com sucesso ${this.trigger.name}`)
-          this.loading = false
-        })
+    async updatedTrigger() {
+      await this.$store.dispatch('trigger/updateTrigger', this.trigger)
+      this.newAlert(`Gatilho atualizado com sucesso ${this.trigger.name}`)
+      this.loading = false
     },
   },
 }

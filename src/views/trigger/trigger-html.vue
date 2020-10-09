@@ -12,7 +12,7 @@
             small
             :outlined="type !== 1"
             color="info"
-            @click="type = 1"
+            @click="dynamic"
           >
             dinâmico
           </VBtn>
@@ -37,38 +37,44 @@
         </VCol>
         <VSpacer></VSpacer>
       </VRow>
-      <VCol v-if="type === 1" cols="12" md="6" class="mx-0 px-0">
-        <p>Template</p>
-        <VSelect
-          v-model="trigger.templateId"
-          no-data-text="Lista indisponível"
-          hide-details
-          :items="templates"
-          return-object
-          item-text="name"
-          item-value="id"
-          outlined
-          @blur="setHtml"
-          @input="setHtml"
-          @change="setHtml"
-        ></VSelect>
-        <VSpacer></VSpacer>
-        <p>Tema</p>
-        <VSelect
-          v-model="trigger.themeId"
-          no-data-text="Lista indisponível"
-          hide-details
-          return-object
-          :items="themes"
-          item-text="name"
-          item-value="id"
-          outlined
-          @blur="setHtml"
-          @input="setHtml"
-          @change="setHtml"
-        ></VSelect>
-        <VSpacer></VSpacer>
-      </VCol>
+      <VRow v-if="type === 1">
+        <VCol
+          cols="12"
+          md="6"
+          class="mx-0 px-0"
+          v-for="(item, index) in trigger.triggerThemeTemplate"
+          :key="index"
+        >
+          <p>Template</p>
+          <VSelect
+            v-model="item.templateId"
+            no-data-text="Lista indisponível"
+            hide-details
+            :items="templates"
+            item-text="name"
+            item-value="id"
+            outlined
+            @blur="setHtml"
+            @input="setHtml"
+            @change="setHtml"
+          ></VSelect>
+          <VSpacer></VSpacer>
+          <p>Tema</p>
+          <VSelect
+            v-model="item.themeId"
+            no-data-text="Lista indisponível"
+            hide-details
+            :items="themes"
+            item-text="name"
+            item-value="id"
+            outlined
+            @blur="setHtml"
+            @input="setHtml"
+            @change="setHtml"
+          ></VSelect>
+          <VSpacer></VSpacer>
+        </VCol>
+      </VRow>
       <VCol class="mx-0 px-0">
         <VBtn
           v-if="!!trigger.id"
@@ -97,12 +103,6 @@ export default {
       default: () => {},
       require: true,
     },
-    triggerHtmlTemplateTema: {
-      type: Object,
-      default: () => {
-        return { templateId: null, themeId: null }
-      },
-    },
     templates: {
       type: Array,
       default: () => {
@@ -129,16 +129,7 @@ export default {
   },
   computed: {},
   mounted() {
-    this.template =
-      this.templates.find(
-        (item) => item.id == this.triggerHtmlTemplateTema.templateId
-      ) || null
-    this.theme =
-      this.themes.find(
-        (item) => item.id == this.triggerHtmlTemplateTema.themeId
-      ) || null
-
-    if (!this.template || !this.theme) {
+    if (this.trigger.triggerThemeTemplate.length === 0) {
       this.type = 2
       this.html = this.trigger.tpl
     }
@@ -156,6 +147,16 @@ export default {
       )
       this.previewLoading = false
       this.preview = true
+    },
+    dynamic() {
+      console.log(this.trigger.triggerThemeTemplate.length)
+      if (this.trigger.triggerThemeTemplate.length === 0) {
+        this.trigger.triggerThemeTemplate.push({
+          themeId: null,
+          templateId: null,
+        })
+      }
+      this.type = 1
     },
   },
 }

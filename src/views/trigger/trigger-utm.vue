@@ -16,9 +16,11 @@
           ></VSelect>
         </VCol>
         <VCol cols="12" sm="6" md="6">
-          <v-btn outlined small class="" @click="addUtm">
-            UTM’s Adicionar <v-icon>mdi-plus</v-icon>
-          </v-btn>
+          <VCol cols="12" sm="6" md="6">
+            <v-btn outlined small class="" @click="addUtm">
+              UTM’s Adicionar <v-icon>mdi-plus</v-icon>
+            </v-btn>
+          </VCol>
 
           <VRow v-for="(tracking, key) in trackings" :key="key">
             <VCol cols="12" sm="5" md="5">
@@ -40,6 +42,11 @@
                 required
                 @change="setTrackings"
               ></VTextField>
+            </VCol>
+            <VCol cols="1" sm="1" md="1" align-self="center">
+              <VBtn text icon color="red " @click="trackings.splice(index, 1)">
+                <VIcon>mdi-delete</VIcon>
+              </VBtn>
             </VCol>
           </VRow>
         </VCol>

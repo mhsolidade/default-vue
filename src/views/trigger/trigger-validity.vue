@@ -17,7 +17,7 @@
           ></v-select>
         </VCol>
         <VCol
-          v-if="!!trigger.hasValidityDate"
+          v-if="trigger.validityDate === 'true'"
           col="12"
           sm="6"
           md="6"
@@ -53,7 +53,7 @@ export default {
       rules: {
         name: [
           (v) => {
-            return !!v || 'Selecione uma opção'
+            return v === 'true' || v === 'false' || 'Selecione uma opção'
           },
         ],
       },

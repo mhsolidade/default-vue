@@ -17,13 +17,12 @@ export default [
     component: () => lazyLoadView(import('@views/trigger/list.vue')),
   },
   {
-    path: '/:triggerId',
+    path: ':triggerId',
     name: 'triggerEdit',
     meta: {
       bradcrumb: [],
       tmp: {},
       async beforeResolve(routeTo, routeFrom, next) {
-        console.log('aaaaa')
         try {
           store.dispatch('trigger/clearTrigger')
           const trigger = await store.dispatch(
@@ -70,7 +69,7 @@ export default [
     }),
   },
   {
-    path: '/novo/:engineName/:engineId',
+    path: 'novo/:engineName/:engineId',
     name: 'triggerNew',
     meta: {
       bradcrumb: [
