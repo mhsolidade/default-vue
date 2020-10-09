@@ -3,7 +3,7 @@
     <template v-slot:activator="{ on }">
       <VBtn text v-on="on">
         <VIcon class="mr-1">mdi-account-circle</VIcon>
-        {{ currentUser.name }}
+        <span v-if="$vuetify.breakpoint.smAndUp"> {{ currentUser.name }}</span>
         <VIcon large>mdi-menu-down</VIcon>
       </VBtn>
     </template>
