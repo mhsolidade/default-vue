@@ -27,7 +27,6 @@ const numberToFullNumber = (value) => {
     'octencilh',
     'nonencilh',
   ]
-  console.log(teste.length, teste[0])
   if (teste.length === 1) {
     return value
   } else if (teste.length === 2) {

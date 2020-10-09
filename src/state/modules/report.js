@@ -102,4 +102,23 @@ export const actions = {
     })
     return Promise.resolve(resp)
   },
+
+  async getReport({ commit, rootState }, { rangeStart, rangeEnd, groupBy }) {
+    const clientId = rootState.client.currentClientId
+
+    return axios
+      .post(`${URL}`, { rangeStart, rangeEnd, groupBy, clientId })
+      .then((resp) => {
+        const report = resp.data.map((item, key) => {
+          for (let prop in item) {
+            if (prop.includes('concat') || prop.includes('dateFormat')) {
+              item.day = item[prop]
+              delete item[prop]
+            }
+          }
+          return item
+        })
+        return Promise.resolve(report)
+      })
+  },
 }

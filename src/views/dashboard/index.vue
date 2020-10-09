@@ -114,7 +114,7 @@ export default {
   methods: {
     percentage(total, value) {
       if (total > 0 && value > 0) {
-        return total / value
+        return (total / value).toFixed()
       }
       return 0
     },
