@@ -11,6 +11,10 @@ export default {
   components: {
     Layout,
   },
+
+  created() {
+    console.log('index')
+  },
 }
 </script>
 

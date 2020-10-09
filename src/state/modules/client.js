@@ -30,7 +30,8 @@ export const actions = {
     console.log('aaa')
     return (
       axios
-        .get(`/api/admin/System/getOptions?system=smart`)
+        .get('/api/sas/user')
+
         // .get('http://localhost/admin/profile')
         .then((response) => {
           const clients = response.data.user.clients

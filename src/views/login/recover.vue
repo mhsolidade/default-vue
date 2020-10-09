@@ -41,7 +41,11 @@
 </template>
 
 <script>
-export default {}
+export default {
+  created() {
+    console.log('recover')
+  },
+}
 </script>
 
 <style lang="scss" module></style>

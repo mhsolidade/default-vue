@@ -98,6 +98,10 @@ export default {
         })
     },
   },
+
+  created() {
+    console.log('login')
+  },
 }
 </script>
 

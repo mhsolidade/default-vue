@@ -20,6 +20,9 @@ import NavBar from '@components/nav-bar.vue'
 
 export default {
   components: { NavBar },
+  created() {
+    console.log('layouts')
+  },
 }
 </script>
 

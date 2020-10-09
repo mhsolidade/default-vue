@@ -66,6 +66,9 @@ export default {
       visibilityConfirmPassword: false,
     }
   },
+  created() {
+    console.log('reset')
+  },
 }
 </script>
 

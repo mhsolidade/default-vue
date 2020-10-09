@@ -15,7 +15,7 @@ axios.interceptors.response.use(
   },
   function(error) {
     // Do something with response error
-    error.response.data = camelizeKeys(error.response.data)
+    if (error.response) error.response.data = camelizeKeys(error.response.data)
     return Promise.reject(error)
   }
 )

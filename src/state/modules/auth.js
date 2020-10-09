@@ -58,11 +58,13 @@ export const actions = {
         remember: true,
       })
       .then((response) => {
-        return response.data.laravelSession
+        return response.data.token
       })
+
     if (!laravelSession) return Promise.resolve(false)
     commit('SET_TOKEN', laravelSession)
     setDefaultAuthHeaders(state)
+    await dispatch('engine/fetchEngines', null, { root: true })
     const user = await dispatch('fetchUser')
     await dispatch('client/fetchClient', null, { root: true })
     return Promise.resolve(user)
@@ -74,6 +76,7 @@ export const actions = {
     commit('SET_TOKEN', null)
     commit('SET_CURRENT_PERMISSION', null)
     dispatch('client/clearCurrentClientId', null, { root: true })
+    dispatch('engine/fetchEngines', null, { root: true })
   },
 
   // Validates the current user's token and refreshes it
@@ -85,10 +88,12 @@ export const actions = {
     return Promise.resolve(user)
   },
   fetchUser({ commit }) {
+    console.log('fetchUser')
     return (
       axios
-        .get('/api/admin/System/getOptions?system=smart')
-        // .get('http://localhost/admin/profile')
+        .get('/api/sas/user')
+        // .get('http://490b39239ef9.ngrok.io/auth-api/user')
+
         .then((response) => {
           const user = response.data.user
           const permission = response.data.perm

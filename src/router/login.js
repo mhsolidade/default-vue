@@ -36,7 +36,13 @@ export default [
       authRequired: true,
       beforeResolve(routeTo, routeFrom, next) {
         store.dispatch('auth/logOut')
-        next({ name: 'login' })
+        const authRequiredOnPreviousRoute = routeFrom.matched.some(
+          (route) => route.meta.authRequired
+        )
+        // Navigate back to previous page, or home as a fallback
+        next(
+          authRequiredOnPreviousRoute ? { name: 'dashboard' } : { ...routeFrom }
+        )
       },
     },
   },
